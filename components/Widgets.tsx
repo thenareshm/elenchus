@@ -17,9 +17,7 @@ export default function Widgets() {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const res = await fetch(
-          `https://newsapi.org/v2/top-headlines?language=en&pageSize=5&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
-        );
+        const res = await fetch("/api/news");
         const data = await res.json();
         if (data.status === "ok") {
           const headlines = data.articles.map((item: any) => ({
