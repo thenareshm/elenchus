@@ -3,7 +3,7 @@
 import { db } from "@/firebase";
 import { closeCommentModal, openLogInModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
-import { CalendarIcon, ChartBarIcon, FaceSmileIcon, MapPinIcon, PhotoIcon } from "@heroicons/react/24/outline";
+
 import { addDoc, arrayUnion, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -59,7 +59,7 @@ export default function PostInput({insideModal}: PostInputProps) {
      border-gray-100
     ">
       <Image
-        src={insideModal ? "/assets/profile-pic.png" : "/assets/irislogo.png"}
+        src={insideModal ? "/assets/profile-pic.png" : "/assets/sblogotb.png"}
         width={44}
         height={44}
         alt={insideModal ? "Profile Picture" : "Logo"}
@@ -68,27 +68,22 @@ export default function PostInput({insideModal}: PostInputProps) {
       <div className="w-full">
         <textarea
           className="resize-none outline-none w-full min-h-[50px] text-lg"
-          placeholder={insideModal ? "Send your reply" : "What's happening!"}
+          placeholder={insideModal ? "Send your reply" : "Start with a #hashtag from trending... What makes sense!"}
           onChange={(event) => setText(event.target.value)}
           value={text}
         />
       
         <div className="flex justify-between pt-5 border-t border-gray-100">
-             <div className="flex space-x-1.5">
-                 <PhotoIcon className="w-[22px] h-[22px] text-[#00C0C3]" />
-                 <ChartBarIcon className="w-[22px] h-[22px] text-[#00C0C3]" />
-                 <FaceSmileIcon className="w-[22px] h-[22px] text-[#00C0C3]" /> 
-                 <CalendarIcon className="w-[22px] h-[22px] text-[#00C0C3]" />
-                 <MapPinIcon className="w-[22px] h-[22px] text-[#00C0C3]" />
+             <div className="flex space-x-1.5"> 
             </div>
 
             <button
-            className="bg-[#00C0C3] text-white w-[80px] h-[36px] rounded-full 
+            className="bg-[#C0BAB5] text-white w-[80px] h-[36px] rounded-full 
             text-sm cursor-pointer disabled:bg-opacity-60"
              disabled={!text}
              onClick= {() => insideModal ? sendComment() : sendPost()} 
              >
-                post
+                Post
             </button>
         </div>
       </div>  

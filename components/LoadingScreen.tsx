@@ -18,20 +18,20 @@ export default function LoadingScreen() {
       
       <div className='flex flex-col items-center'>
         <Image
-          src={'/assets/irislogo.png'}
+          src={'/assets/sblogotb.png'}
           width={120}
           height={120}
           alt="Busy Bee Logo"
           className='mb-5'
         />
         <h1 className='text-6xl font-bold mb-10'>
-          Iris <span className='text-[#00C0C3]'>World</span>
+          Sensebook <span className='text-[#dae1e1]'></span>
         </h1>
         <LinearProgress
           sx={{
             width: 265,
             height: 10,
-            backgroundColor: "#00C0C3",
+            backgroundColor: "#C0BAB5",
             "& .MuiLinearProgress-bar": {
               backgroundColor: "black"
             }

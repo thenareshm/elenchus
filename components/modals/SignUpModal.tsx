@@ -96,7 +96,7 @@ export default function SignUpModal() {
                        <div className="w-full space-y-5 mb-10">
                          <input
                          className="w-full h-[54px] border border-gray-200
-                         outline-none ps-3 rounded-[4px] focus:border-[#00C0C3]
+                         outline-none ps-3 rounded-[4px] focus:border-[#C0BAB5]
                           transition"
                           placeholder="Name"
                          type="text"
@@ -105,7 +105,7 @@ export default function SignUpModal() {
                          />
                          <input
                          className="w-full h-[54px] border border-gray-200
-                         outline-none ps-3 rounded-[4px] focus:border-[#00C0C3]
+                         outline-none ps-3 rounded-[4px] focus:border-[#C0BAB5]
                           transition"
                           placeholder="Email"
                          type="email" 
@@ -114,7 +114,7 @@ export default function SignUpModal() {
                          />
 
                          <div className="w-full h-[54px] border border-gray-200
-                         outline-none ps-3 rounded-[4px] focus-within:border-[#00C0C3]
+                         outline-none ps-3 rounded-[4px] focus-within:border-[#C0BAB5]
                           transition flex items-center overflow-hidden pr-3"
                           >
                             <input 
@@ -133,7 +133,7 @@ export default function SignUpModal() {
                          
                       </div>
                         <button
-                        className="bg-[#00C0C3] text-white h-[48px]
+                        className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md md-5 w-full"
                          onClick={() => handleSignUp()}
                          > 
@@ -141,7 +141,7 @@ export default function SignUpModal() {
                         </button>
                         <span className='mb-5 text-sm text-center block'>Or</span>
                       <button
-                        className="bg-[#00C0C3] text-white h-[48px]
+                        className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md w-full"
                          onClick={() => handleGuestLogIn()}
                          >

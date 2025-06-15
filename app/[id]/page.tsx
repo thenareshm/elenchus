@@ -49,7 +49,7 @@ export default async function page( { params }: PageProps) {
                             <Link href="/">
                                 <ArrowLeftIcon className="w-5 h-5 mr-10"/>
                             </Link>
-                            Iris 
+                            Sense Thread 
                       </div>
 
                       <div className='flex flex-col p-3 space-y-5 border-b
@@ -89,24 +89,9 @@ export default async function page( { params }: PageProps) {
                       </div>
 
                       <div className="border-b border-gray-100 p-3 text-[15px]">
-                          <span className="font-bold">{post?.likes.lenght}</span> Likes
+                          <span className="font-bold">{post?.likes.lenght}</span> Replies
                       </div>
-
-                      <div className="border-b border-gray-100 p-3 text-[15px] flex justify-evenly">
-                            <ChatBubbleOvalLeftEllipsisIcon
-                                className="w-[22px] h-[22px] text-[#707E89] cursor-not-allowed"
-                            />
-                            <HeartIcon
-                                className="w-[22px] h-[22px] text-[#707E89] cursor-not-allowed"
-                            />
-                            <ChartBarIcon
-                                className="w-[22px] h-[22px] text-[#707E89] cursor-not-allowed"
-                            />
-                            <ArrowUpTrayIcon
-                                className="w-[22px] h-[22px] text-[#707E89] cursor-not-allowed"
-                            />
-                        </div>
-
+                    
                         {post?.comments.map((comment: Comment) =>(
                          <Comment name={comment.name} username={comment.username}
                          text={comment.text}/>
@@ -136,21 +121,6 @@ function Comment({ name, username, text}: CommentProps) {
     return (
       <div className="border-b  border-gray-100">
         <PostHeader name={name} username={username} text={text}/>
-        
-        <div className="flex space-x-14 p-3 ms-16">
-          <ChatBubbleOvalLeftEllipsisIcon
-            className="w-[22px] h-[22px] cursor-not-allowed"
-          />
-          <HeartIcon
-            className="w-[22px] h-[22px] cursor-not-allowed"
-          />
-          <ChartBarIcon
-            className="w-[22px] h-[22px] cursor-not-allowed"
-          />
-          <ArrowUpTrayIcon
-            className="w-[22px] h-[22px] cursor-not-allowed"
-          />
-        </div>
       </div>
     );
   }

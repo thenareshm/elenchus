@@ -56,11 +56,11 @@ export default function LogInModal() {
                     onClick={() => dispatch(closeLogInModal ())}
                     />
                     <div className="pt-10 pb-20 px-4 sm:px-20">
-                      <h1 className="text-3xl font-bold mb-10">Log in to Iris </h1>
+                      <h1 className="text-3xl font-bold mb-10">Log in to Sensebook </h1>
                        <div className="w-full space-y-5 mb-10">
                          <input
                          className="w-full h-[54px] border border-gray-200
-                         outline-none ps-3 rounded-[4px] focus:border-[#00C0C3]
+                         outline-none ps-3 rounded-[4px] focus:border-[#C0BAB5]
                           transition"
                           placeholder="Email"
                          type="email" 
@@ -69,7 +69,7 @@ export default function LogInModal() {
                          />
 
                          <div className="w-full h-[54px] border border-gray-200
-                         outline-none ps-3 rounded-[4px] focus-within:border-[#00C0C3]
+                         outline-none ps-3 rounded-[4px] focus-within:border-[#C0BAB5]
                           transition flex items-center overflow-hidden pr-3"
                           >
                             <input 
@@ -88,7 +88,7 @@ export default function LogInModal() {
                          
                       </div>
                         <button
-                        className="bg-[#00C0C3] text-white h-[48px]
+                        className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md md-5 w-full"
                          onClick={() => handleLogIn()}
                          > 
@@ -96,7 +96,7 @@ export default function LogInModal() {
                       </button>
                       <span className='mb-5 text-sm text-center block '>Or</span>
                       <button
-                        className="bg-[#00C0C3] text-white h-[48px]
+                        className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md w-full"
                          onClick={() => handleGuestLogIn()}
                          > 

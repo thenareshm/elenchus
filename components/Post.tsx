@@ -12,6 +12,13 @@ import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 
+import HeartbrainIcon from '@/components/icons/HeartbrainIcon';
+
+
+
+
+
+
 interface PostProps {
   data: DocumentData
   id: string;
@@ -56,8 +63,8 @@ export default function Post({data, id }: PostProps) {
       <div className="m1-16 p-3 flex space-x-14">
         <div className="relative">
             <ChatBubbleOvalLeftEllipsisIcon
-            className="w-[22px] h-[22px] cursor-pointer
-            hover:text-[#00C0C3] transition
+            className="w-[24px] h-[24px] cursor-pointer
+            hover:text-[#C0BAB5] transition
             "
             onClick={() =>{
 
@@ -85,15 +92,15 @@ export default function Post({data, id }: PostProps) {
         <div className="relative">
           { 
             data.likes.includes(user.uid) ?
-            <HeartSolidIcon
-            className="w-[22px] h-[22px] cursor-pointer
-            text-pink-500 transition
+            <HeartbrainIcon
+            className="w-[24px] h-[24px] cursor-pointer
+            text-red-500 transition
             "
             onClick={() => likePost()}
             />:
-            <HeartIcon
-            className="w-[22px] h-[22px] cursor-pointer
-            hover:text-[#00C0C3] transition
+            <HeartbrainIcon
+            className="w-[24px] h-[24px] cursor-pointer
+            hover:text-[#C0BAB5] transition
             "
             onClick={() => likePost()}
             />
@@ -106,22 +113,7 @@ export default function Post({data, id }: PostProps) {
           }
 
         </div>
-        <div className="relative">
-            <ChartBarIcon
-            className="w-[22px] h-[22px]
-            cursor-not-allowed
-            "
-            />
-
-        </div>
-        <div className="relative">
-            <ArrowUpTrayIcon
-            className="w-[22px] h-[22px] 
-            cursor-not-allowed
-            "
-            />
-
-        </div>
+        
       </div>
     </div>
   );

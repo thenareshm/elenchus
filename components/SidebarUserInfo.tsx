@@ -27,7 +27,7 @@ export default function SidebarUserInfo () {
 
 
        <div 
-         className="absolute bottom-3 flex items-center justify-start space-x-2
+         className="flex items-center justify-start space-x-2
          xl:p-3 xl:pe-6 hover:bg-gray-500 hover:bg-opacity-10
          rounded-full transistion cursor-pointer w-fit xl:w-[240px]
          "
