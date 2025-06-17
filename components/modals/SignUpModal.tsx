@@ -70,6 +70,10 @@ export default function SignUpModal() {
     return unsubscrbie
   }, [] )
 
+  const handleClose = () => {
+    dispatch(closeSignUpModal());
+  };
+
   return (
     <>
        <button
@@ -83,13 +87,16 @@ export default function SignUpModal() {
             </button>
 
            <Modal open={isOpen} 
-             onClose={() => dispatch(closeSignUpModal())}
+             onClose={handleClose}
             className='flex justify-center items-center'>
                 <div className='w-full h-full sm:w-[600px] sm:h-fit bg-white
                 sm:rounded-xl outline-none
-                '>
+                '
+                onClick={(e) => e.stopPropagation()}
+                >
                     <XMarkIcon className='w-7 mt-5 ms-5 cursor-pointer'
-                    onClick={() => dispatch(closeSignUpModal())}
+                    onClick={handleClose}
+                    data-modal-close="true"
                     />
                     <div className="pt-10 pb-20 px-4 sm:px-20">
                       <h1 className="text-3xl font-bold mb-10">Create your account</h1>
