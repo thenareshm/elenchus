@@ -22,8 +22,8 @@ const onboardingCards = [
   },
   {
     title: '🌱 The Future is Who We Become.',
-    body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions. Let's build our sensible muzzle.`,
-    cta: 'Next →',
+    body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions. Let's build our sensible muscle?`,
+    cta: 'grow that muscle →',
   },
   {
     title: '👋 Say goodbye to endless scrolling and dopamine overload.',
