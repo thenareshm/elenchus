@@ -1,6 +1,5 @@
 "use client"
 
-
 import React from 'react'
 import SignUpModal from './modals/SignUpModal'
 import LogInModal from './modals/LogInModal'
@@ -14,9 +13,10 @@ export default function SignUpPrompt() {
   return (
     !name &&
     <div
-    className='fixed w-full h-[80px] bg-[#C0BAB5]
-    bottom-0 flex justify-center items-center md:space-x-5
-    lg:justify-between lg:px-20 xl:px-40 2xl:px-80 z-[100]'
+      id="signup-prompt"
+      className='fixed w-full h-[80px] bg-[#C0BAB5]
+      bottom-0 flex justify-center items-center md:space-x-5
+      lg:justify-between lg:px-20 xl:px-40 2xl:px-80 z-[100]'
     >
     
         <div className='hidden md:flex flex-col text-white'>
