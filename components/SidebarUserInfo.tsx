@@ -41,14 +41,16 @@ export default function SidebarUserInfo () {
               <span className="whitespace-normal text-ellipsis overflow-hidden text-gray-500">{user.username}</span>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => handleSignOUt()}
-            className="p-1 rounded-full hover:bg-gray-200 group"
-            aria-label="Log out"
-          >
-            <PowerIcon className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
-          </button>
+          {user.username && (
+            <button
+              type="button"
+              onClick={() => handleSignOUt()}
+              className="p-1 rounded-full hover:bg-gray-200 group"
+              aria-label="Log out"
+            >
+              <PowerIcon className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
+            </button>
+          )}
         </div>
   )
 }
