@@ -11,24 +11,24 @@ const onboardingCards = [
     cta: 'Next →',
   },
   {
-    title: '🧠❤️ "Where the Brain Meets the Heart."',
+    title: '🧠❤️ Where the Brain Meets the Heart.',
     body: `Our symbol says it all: logic + empathy.\nHere, we don't just react—we reflect.\nBecause the future belongs to those who make sense.`,
     cta: "I'm Listening →",
   },
   {
-    title: '📢 "Say Something Meaningful."',
+    title: '📢 Say Something Meaningful.',
     body: `From global events to daily thoughts—your voice matters.\nUse hashtags to join thoughtful threads.\nStart with: #WhatMakesSense`,
     cta: 'Got It →',
   },
   {
-    title: '🌱 "The Future is Who We Become."',
+    title: '🌱 The Future is Who We Become.',
     body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions. Let's build our sensible muzzle.`,
     cta: 'Next →',
   },
   {
-    title: 'Say goodbye to endless scrolling and dopamine overload.',
+    title: '👋 Say goodbye to endless scrolling and dopamine overload.',
     body: '',
-    cta: 'Yes, Please',
+    cta: 'Hell Yes!',
   },
   {
     title: "It's time to Snap — Facebook, Instagram, and senseless doom scrolling.",
@@ -63,8 +63,8 @@ export default function Onboarding({ onComplete }: { onComplete: () => void }) {
       setIsFadingOut(false);
       setTimeout(() => {
         setIsTransitioning(false);
-      }, 1200); // Fade-in duration
-    }, 1200); // Fade-out duration
+      }, 1000); // Fade-in duration
+    }, 1000); // Fade-out duration
   };
 
   const { title, body, cta, isThanos } = onboardingCards[step];
@@ -76,23 +76,23 @@ export default function Onboarding({ onComplete }: { onComplete: () => void }) {
         className={`transform transition-all ease-in-out ${
           isFadingOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
         }`}
-        style={{ transitionDuration: '1200ms' }}
+        style={{ transitionDuration: '1000ms' }}
       >
         {isThanos && showThanosSnap ? (
           <div className="flex flex-col items-center space-y-8">
             <ThanosSnap
               text={title}
               onComplete={onComplete}
-              className="text-3xl sm:text-4xl font-bold mb-8 max-w-2xl mx-auto"
+              className="text-2xl sm:text-4xl font-bold mb-8 max-w-2xl mx-auto"
             />
             <div className="relative group mt-12">
               <Image
                 src="/assets/thanossnap1.png"
                 alt="Thanos Snap"
-                width={200}
-                height={200}
-                className="relative mx-auto cursor-pointer transition-all duration-[3000ms] hover:opacity-0 hover:blur-sm hover:scale-95"
-                onClick={handleNext}
+                width={120}
+                height={120}
+                className="relative mx-auto cursor-pointer transition-all duration-[1000ms] hover:opacity-0 hover:blur-sm hover:scale-95"
+                //onClick={handleNext}
               />
             </div>
           </div>

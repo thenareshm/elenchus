@@ -21,7 +21,7 @@ export default function LoadingScreen() {
           src={'/assets/sblogotb.png'}
           width={120}
           height={120}
-          alt="Busy Bee Logo"
+          alt="sense book Logo"
           className='mb-5'
         />
         <h1 className='text-6xl font-bold mb-10'>
