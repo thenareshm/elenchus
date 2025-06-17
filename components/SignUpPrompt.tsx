@@ -21,7 +21,7 @@ export default function SignUpPrompt() {
     
         <div className='hidden md:flex flex-col text-white'>
             <span className='text-xl font bold'>Don't miss out on being sensible</span>
-            <span>People on Sensebook are always make sense</span>
+            <span>People on Sensebook are always making sense</span>
         </div>
     
         <div className='flex space-x-2 w-full md:w-fit p-3'>
