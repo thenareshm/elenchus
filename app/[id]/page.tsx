@@ -13,7 +13,7 @@ import { db } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import Onboarding from '@/components/Onboarding'
+import WebsiteOnboarding from '@/components/WebsiteOnboarding'
 
 const fetchPost = async (id: string) => {
     const postRef = doc(db, "posts", id)
@@ -151,7 +151,7 @@ export default function Page({ params }: PageProps) {
             </PreventDefaultWrapper>
 
             <SignUpPrompt />
-            {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
+            {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />}
         </>
     );
 }

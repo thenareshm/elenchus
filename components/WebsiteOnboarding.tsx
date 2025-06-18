@@ -38,7 +38,7 @@ const onboardingCards = [
   }
 ];
 
-export default function Onboarding({ onComplete }: { onComplete: () => void }) {
+export default function WebsiteOnboarding({ onComplete }: { onComplete: () => void }) {
   const [step, setStep] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showThanosSnap, setShowThanosSnap] = useState(false);
