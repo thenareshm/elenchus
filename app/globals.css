@@ -2,3 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-white text-[#0F1419] transition-colors duration-300;
+}
+
+html.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/redux/StoreProvider";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,12 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
-       <body className={inter.className}>{children}</body>
+       <body className={`${inter.className} transition-colors duration-300`}>
+         {children}
+         <Script id="theme-init" strategy="beforeInteractive">
+           {`(function(){try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`}
+         </Script>
+       </body>
       </html>
     </StoreProvider>
 
