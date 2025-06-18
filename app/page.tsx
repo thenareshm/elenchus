@@ -7,7 +7,7 @@ import PostFeed from '@/components/PostFeed';
 import Sidebar from '@/components/Sidebar';
 import SignUpPrompt from '@/components/SignUpPrompt';
 import Widgets from '@/components/Widgets';
-import Onboarding from '@/components/Onboarding';
+import WebsiteOnboarding from '@/components/WebsiteOnboarding';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { openSignUpModal } from '@/redux/slices/modalSlice';
@@ -123,7 +123,7 @@ export default function Home() {
       <SignUpPrompt />
       <LoadingScreen />
 
-      {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
+      {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />}
     </>
   );
 }
