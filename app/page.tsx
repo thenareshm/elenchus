@@ -7,6 +7,7 @@ import PostFeed from '@/components/PostFeed';
 import Sidebar from '@/components/Sidebar';
 import SignUpPrompt from '@/components/SignUpPrompt';
 import Widgets from '@/components/Widgets';
+import Footer from '@/components/Footer';
 import WebsiteOnboarding from '@/components/WebsiteOnboarding';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -122,6 +123,8 @@ export default function Home() {
       <CommentModal />
       <SignUpPrompt />
       <LoadingScreen />
+
+      <Footer />
 
       {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />}
     </>
