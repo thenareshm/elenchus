@@ -39,7 +39,7 @@ export default function Widgets() {
   }
 
   return (
-    <div className={`p-3 hidden lg:flex flex-col space-y-4 ps-10`} style={{ width: cardWidth }}>
+    <div id="widgets" className={`p-3 hidden lg:flex flex-col space-y-4 ps-10`} style={{ width: cardWidth }}>
       <div className="bg-[#EFF3F4] rounded-xl p-4">
         <h1 className="text-xl font-bold mb-4">What's Trending</h1>
         {error ? (

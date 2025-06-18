@@ -8,6 +8,7 @@ import Sidebar from '@/components/Sidebar';
 import SignUpPrompt from '@/components/SignUpPrompt';
 import Widgets from '@/components/Widgets';
 import WebsiteOnboarding from '@/components/WebsiteOnboarding';
+import Footer from '@/components/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { openSignUpModal } from '@/redux/slices/modalSlice';
@@ -119,6 +120,7 @@ export default function Home() {
           <Widgets />
         </div>
       </PreventDefaultWrapper>
+      <Footer />
       <CommentModal />
       <SignUpPrompt />
       <LoadingScreen />
