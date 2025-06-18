@@ -20,7 +20,7 @@ export default function Sidebar() {
   };
 
   return (
-    <nav className="hidden sm:flex flex-col p-3 xl:ml-20 xl:mr-10 w-[280px]">
+    <nav className="hidden sm:flex flex-col p-3 xl:ml-20 xl:mr-10 w-[280px]" data-testid="sidebar">
       <div className="relative flex flex-col items-start">
         {/* Header Row: Logo + Sensebook Button */}
         <div className="flex items-center space-x-3 py-3 w-full">

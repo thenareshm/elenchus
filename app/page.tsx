@@ -8,6 +8,7 @@ import Sidebar from '@/components/Sidebar';
 import SignUpPrompt from '@/components/SignUpPrompt';
 import Widgets from '@/components/Widgets';
 import WebsiteOnboarding from '@/components/WebsiteOnboarding';
+import Footer from '@/components/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { openSignUpModal } from '@/redux/slices/modalSlice';
@@ -113,7 +114,7 @@ export default function Home() {
   return (
     <>
       <PreventDefaultWrapper>
-        <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center">
+        <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center pb-32">
           <Sidebar />
           <PostFeed />
           <Widgets />
@@ -122,6 +123,7 @@ export default function Home() {
       <CommentModal />
       <SignUpPrompt />
       <LoadingScreen />
+      <Footer />
 
       {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />}
     </>
