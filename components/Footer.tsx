@@ -69,7 +69,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-600">
           <div className="flex items-center gap-6">
             {/* Pomodoro Timer */}
-            <div className="font-mono">⏱️ {formatTime(timeLeft)}</div>
+            <div className="font-mono">Flow ⏱️ {formatTime(timeLeft)}</div>
 
             {/* Social Links */}
             <Link 
@@ -81,7 +81,7 @@ const Footer = () => {
               Buy Me a Coffee ☕
             </Link>
             <Link 
-              href="https://discord.gg/your-discord" 
+              href="https://discord.gg/q6PueR6X3j" 
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-900 transition-colors"
@@ -110,7 +110,7 @@ const Footer = () => {
               >
                 Naresh Mandla
               </Link>{' '}
-              🌿🧠❤️
+              ❤️🧠
             </p>
           </div>
         </div>

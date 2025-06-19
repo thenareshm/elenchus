@@ -6,13 +6,18 @@ import ThanosSnap from './utils/ThanosSnap';
 
 const onboardingCards = [
   {
-    title: '🌎 "Make Sense of the World. Together."',
-    body: `You've just entered a space where thoughts aren't shouted—they're shared with purpose.\nAt Sensebook, we believe in calm, clear, compassionate conversation.`,
-    cta: 'Next →',
+    title: '💖 Special Thanks to Mahesh & Lingappa Mandla',
+    body: `This journey wouldn’t be possible without them.\n\nTheir love, belief, and unwavering support gave life to Sensebook.\nFrom every click to every connection—you’re part of that legacy.`,
+    cta: 'Thanks!!',
   },
   {
+    title: '🌎 Make Sense of the World',
+    body: `You've just entered a space where thoughts aren't shouted—they're shared with purpose.\nAt Sensebook, we believe in calm, clear, compassionate conversation.`,
+    cta: 'Next →',
+  },    
+  {
     title: '🧠❤️ Where the Brain Meets the Heart.',
-    body: `Our symbol says it all: logic + empathy.\nHere, we don't just react—we reflect.\nBecause the future belongs to those who make sense.`,
+    body: `Our logo says it all: logic + empathy.\nHere, we don't just react—we reflect.\nBecause the future belongs to those who make sense.`,
     cta: "I'm Listening →",
   },
   {
@@ -22,11 +27,11 @@ const onboardingCards = [
   },
   {
     title: '🌱 The Future is Who We Become.',
-    body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions. Let's build our sensible muscle?`,
+    body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions.So let's build our sensible muscle?`,
     cta: 'grow that muscle →',
   },
   {
-    title: '👋 Say goodbye to endless scrolling and dopamine overload.',
+    title: '👋 Say goodbye to Doomscrolling and Dopamine overload.',
     body: '',
     cta: 'Hell Yes!',
   },
@@ -91,7 +96,7 @@ export default function WebsiteOnboarding({ onComplete }: { onComplete: () => vo
                 alt="Thanos Snap"
                 width={120}
                 height={120}
-                className="relative mx-auto cursor-pointer transition-all duration-[1000ms] hover:opacity-0 hover:blur-sm hover:scale-95"
+                className="relative mx-auto transition-all duration-[1000ms]"
                 //onClick={handleNext}
               />
             </div>

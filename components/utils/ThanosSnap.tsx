@@ -47,7 +47,7 @@ export default function ThanosSnap({ text, onComplete, className = '' }: ThanosS
     }, 3000); // 3 second delay for reading
 
     // Call onComplete after all animations complete
-    const maxDuration = 12000; // 12 seconds total duration
+    const maxDuration = 10000; // 10 seconds total duration
     setTimeout(onComplete, maxDuration);
   }, [text, onComplete]);
 
