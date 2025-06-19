@@ -7,7 +7,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Sensebook",
-  description: "Sensebook - A sensible social dicussion app on what’s happening and how it make sense into the future world.",
+  description: "Sensebook - A sensible social dicussion app on what's happening and how it make sense into the future world.",
+  icons: {
+    icon: '/sblogotb.ico',
+    shortcut: '/sblogotb.ico',
+  },
 };
 
 export default function RootLayout({
@@ -21,6 +25,5 @@ export default function RootLayout({
        <body className={inter.className}>{children}</body>
       </html>
     </StoreProvider>
-
   );
 }

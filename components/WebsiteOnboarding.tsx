@@ -6,32 +6,37 @@ import ThanosSnap from './utils/ThanosSnap';
 
 const onboardingCards = [
   {
-    title: '🌎 "Make Sense of the World. Together."',
-    body: `You've just entered a space where thoughts aren't shouted—they're shared with purpose.\nAt Sensebook, we believe in calm, clear, compassionate conversation.`,
-    cta: 'Next →',
+    title: '💖 Special Thanks to Mahesh Mandla & Lingappa Mandla',
+    body: `This journey wouldn't be possible without them.\n\nTheir love, belief, and unwavering support gave life to Sensebook.\nFrom every click to every connection—you're part of that legacy.`,
+    cta: 'Thanks!!',
   },
   {
-    title: '🧠❤️ Where the Brain Meets the Heart.',
-    body: `Our symbol says it all: logic + empathy.\nHere, we don't just react—we reflect.\nBecause the future belongs to those who make sense.`,
+    title: '🌎 Make Sense of the World',
+    body: `You've just entered a space where thoughts aren't shouted—they're shared with purpose.\nAt Sensebook, we believe in calm, clear, compassionate conversation.`,
+    cta: 'Next →',
+  },    
+  {
+    title: '🧠❤️ Where the Brain Meets the Heart',
+    body: `Our logo says it all: logic + empathy.\nHere, we don't just react—we reflect.\nBecause the future belongs to those who make sense.`,
     cta: "I'm Listening →",
   },
   {
-    title: '📢 Say Something Meaningful.',
+    title: '📢 Say Something Meaningful',
     body: `From global events to daily thoughts—your voice matters.\nUse hashtags to join thoughtful threads.\nStart with: #WhatMakesSense`,
     cta: 'Got It →',
   },
   {
-    title: '🌱 The Future is Who We Become.',
-    body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions. Let's build our sensible muscle?`,
+    title: '🌱 The Future is Who We Become',
+    body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions.So let's build our sensible muscle?`,
     cta: 'grow that muscle →',
   },
   {
-    title: '👋 Say goodbye to endless scrolling and dopamine overload.',
+    title: '👋 Say goodbye to Doomscrolling and Dopamine overload',
     body: '',
     cta: 'Hell Yes!',
   },
   {
-    title: "It's time to Snap — Facebook, Instagram, and senseless doom scrolling.",
+    title: "It's time to Snap — Facebook,\u00A0Instagram, and senseless doom scrolling",
     body: '',
     cta: '',
     isThanos: true,
@@ -80,25 +85,26 @@ export default function WebsiteOnboarding({ onComplete }: { onComplete: () => vo
       >
         {isThanos && showThanosSnap ? (
           <div className="flex flex-col items-center space-y-8">
-            <ThanosSnap
-              text={title}
-              onComplete={onComplete}
-              className="text-2xl sm:text-4xl font-bold mb-8 max-w-2xl mx-auto"
-            />
+            <div className="w-full max-w-4xl mx-auto px-4">
+              <ThanosSnap
+                text="It's time to Snap — Facebook, Instagram, and senseless doom scrolling."
+                onComplete={onComplete}
+                className="text-2xl sm:text-4xl font-bold mb-8 inline-block w-full"
+              />
+            </div>
             <div className="relative group mt-12">
               <Image
-                src="/assets/thanossnap1.png"
+                src="/assets/thanossnap.png"
                 alt="Thanos Snap"
                 width={120}
                 height={120}
-                className="relative mx-auto cursor-pointer transition-all duration-[1000ms] hover:opacity-0 hover:blur-sm hover:scale-95"
-                //onClick={handleNext}
+                className="relative mx-auto transition-all duration-[1000ms]"
               />
             </div>
           </div>
         ) : (
           <>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-8 whitespace-pre-line max-w-2xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-8 whitespace-pre-line break-words max-w-8xl mx-auto">
               {title}
             </h1>
             {body && (

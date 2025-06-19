@@ -15,49 +15,60 @@ export default function ThanosSnap({ text, onComplete, className = '' }: ThanosS
     if (!containerRef.current) return;
 
     const container = containerRef.current;
-    const letters = text.split('').map((char, i) => {
-      const span = document.createElement('span');
-      span.textContent = char;
-      span.style.display = 'inline-block';
-      span.style.opacity = '1';
-      // Much slower transition for each letter
-      span.style.transition = `all ${Math.random() * 4 + 6}s cubic-bezier(0.4, 0, 0.2, 1)`;
-      // Longer varied delays for more natural effect
-      span.style.transitionDelay = `${Math.random() * 2 + 1}s`;
-      return span;
+    // Split by words instead of characters
+    const words = text.split(' ');
+    const elements = words.map((word, i) => {
+      const wordContainer = document.createElement('span');
+      wordContainer.style.display = 'inline-block';
+      wordContainer.style.whiteSpace = 'nowrap';
+      wordContainer.style.marginRight = '0.25em'; // Add space between words
+      
+      const letters = word.split('').map((char) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.style.display = 'inline-block';
+        span.style.opacity = '1';
+        span.style.transition = `all ${Math.random() * 4 + 6}s cubic-bezier(0.4, 0, 0.2, 1)`;
+        span.style.transitionDelay = `${Math.random() * 2 + 1}s`;
+        return span;
+      });
+      
+      letters.forEach(letter => wordContainer.appendChild(letter));
+      return wordContainer;
     });
 
-    // Clear and append new letters
+    // Clear and append new word containers
     container.innerHTML = '';
-    letters.forEach(letter => container.appendChild(letter));
+    elements.forEach(element => container.appendChild(element));
 
     // Initial delay to allow reading
     setTimeout(() => {
-      // Trigger the fade out effect with smoother animations
-      letters.forEach(letter => {
-        letter.style.opacity = '0';
-        letter.style.transform = `
+      container.querySelectorAll('span > span').forEach(letter => {
+        const span = letter as HTMLSpanElement;
+        span.style.opacity = '0';
+        span.style.transform = `
           translate(${(Math.random() - 0.5) * 100}px, 
                    ${(Math.random() - 0.5) * 100}px) 
           rotate(${Math.random() * 360}deg) 
           scale(${Math.random() * 0.5})
         `;
-        letter.style.filter = `blur(${Math.random() * 10 + 5}px)`;
+        span.style.filter = `blur(${Math.random() * 10 + 5}px)`;
       });
-    }, 3000); // 3 second delay for reading
+    }, 3000);
 
-    // Call onComplete after all animations complete
-    const maxDuration = 12000; // 12 seconds total duration
+    const maxDuration = 10000;
     setTimeout(onComplete, maxDuration);
   }, [text, onComplete]);
 
   return (
     <div 
       ref={containerRef}
-      className={`whitespace-pre-wrap ${className}`}
+      className={`text-center ${className}`}
       style={{
         perspective: '1000px',
-        transformStyle: 'preserve-3d'
+        transformStyle: 'preserve-3d',
+        wordBreak: 'keep-all',
+        overflowWrap: 'normal'
       }}
     >
       {text}
