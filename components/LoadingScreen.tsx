@@ -27,7 +27,7 @@ export default function LoadingScreen() {
         <h1 className='text-6xl font-bold mb-10'>
           Sensebook <span className='text-[#dae1e1]'></span>
         </h1>
-        {/*<LinearProgress
+        <LinearProgress
           sx={{
             width: 265,
             height: 10,
@@ -35,7 +35,7 @@ export default function LoadingScreen() {
             "& .MuiLinearProgress-bar": {
               backgroundColor: "black"
             }
-          }} /> */}
+          }} />
       </div>
     </div>
   )
