@@ -6,7 +6,7 @@ import ThanosSnap from './utils/ThanosSnap';
 
 const onboardingCards = [
   {
-    title: '💖 Special Thanks to Mahesh & Lingappa Mandla',
+    title: '💖 Special Thanks to Mahesh Mandla & Lingappa Mandla',
     body: `This journey wouldn’t be possible without them.\n\nTheir love, belief, and unwavering support gave life to Sensebook.\nFrom every click to every connection—you’re part of that legacy.`,
     cta: 'Thanks!!',
   },
@@ -92,7 +92,7 @@ export default function WebsiteOnboarding({ onComplete }: { onComplete: () => vo
             />
             <div className="relative group mt-12">
               <Image
-                src="/assets/thanossnap1.png"
+                src="/assets/thanossnap.png"
                 alt="Thanos Snap"
                 width={120}
                 height={120}
@@ -103,7 +103,7 @@ export default function WebsiteOnboarding({ onComplete }: { onComplete: () => vo
           </div>
         ) : (
           <>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-8 whitespace-pre-line max-w-2xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-8 whitespace-pre-line break-words max-w-8xl mx-auto">
               {title}
             </h1>
             {body && (
