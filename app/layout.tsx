@@ -9,8 +9,24 @@ export const metadata: Metadata = {
   title: "Sensebook",
   description: "Sensebook - A sensible social dicussion app on what's happening and how it make sense into the future world.",
   icons: {
-    icon: '/sblogotb.ico',
-    shortcut: '/sblogotb.ico',
+    icon: [
+      { url: '/sblogotb.png', type: 'image/png' },
+      { url: '/sblogotb.ico', type: 'image/x-icon' }
+    ],
+    shortcut: [
+      { url: '/sblogotb.png', type: 'image/png' },
+      { url: '/sblogotb.ico', type: 'image/x-icon' }
+    ],
+    apple: [
+      { url: '/sblogotb.png', type: 'image/png' }
+    ],
+    other: [
+      {
+        rel: 'icon',
+        url: '/sblogotb.png',
+        type: 'image/png'
+      }
+    ],
   },
 };
 
@@ -22,7 +38,12 @@ export default function RootLayout({
   return (
     <StoreProvider>
       <html lang="en">
-       <body className={inter.className}>{children}</body>
+        <head>
+          <link rel="icon" type="image/png" href="/sblogotb.png" />
+          <link rel="icon" type="image/x-icon" href="/sblogotb.ico" />
+          <link rel="shortcut icon" type="image/png" href="/sblogotb.png" />
+        </head>
+        <body className={inter.className}>{children}</body>
       </html>
     </StoreProvider>
   );
