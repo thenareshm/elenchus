@@ -12,6 +12,7 @@ import Footer from '@/components/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { openSignUpModal } from '@/redux/slices/modalSlice';
+import Head from 'next/head';
 
 export default function Home() {
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -113,6 +114,10 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <link rel="icon" href="/sblogotb.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/sblogotb.ico" type="image/x-icon" />
+      </Head>
       <PreventDefaultWrapper>
         <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center pb-32">
           <Sidebar />
