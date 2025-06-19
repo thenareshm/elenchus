@@ -7,7 +7,7 @@ import ThanosSnap from './utils/ThanosSnap';
 const onboardingCards = [
   {
     title: '💖 Special Thanks to Mahesh Mandla & Lingappa Mandla',
-    body: `This journey wouldn’t be possible without them.\n\nTheir love, belief, and unwavering support gave life to Sensebook.\nFrom every click to every connection—you’re part of that legacy.`,
+    body: `This journey wouldn't be possible without them.\n\nTheir love, belief, and unwavering support gave life to Sensebook.\nFrom every click to every connection—you're part of that legacy.`,
     cta: 'Thanks!!',
   },
   {
@@ -16,27 +16,27 @@ const onboardingCards = [
     cta: 'Next →',
   },    
   {
-    title: '🧠❤️ Where the Brain Meets the Heart.',
+    title: '🧠❤️ Where the Brain Meets the Heart',
     body: `Our logo says it all: logic + empathy.\nHere, we don't just react—we reflect.\nBecause the future belongs to those who make sense.`,
     cta: "I'm Listening →",
   },
   {
-    title: '📢 Say Something Meaningful.',
+    title: '📢 Say Something Meaningful',
     body: `From global events to daily thoughts—your voice matters.\nUse hashtags to join thoughtful threads.\nStart with: #WhatMakesSense`,
     cta: 'Got It →',
   },
   {
-    title: '🌱 The Future is Who We Become.',
+    title: '🌱 The Future is Who We Become',
     body: `What if the next social revolution isn't louder but wiser?\nLet's build a community where nuance, growth, and dialogue thrive.\n\nThe future is built with sensible questions.So let's build our sensible muscle?`,
     cta: 'grow that muscle →',
   },
   {
-    title: '👋 Say goodbye to Doomscrolling and Dopamine overload.',
+    title: '👋 Say goodbye to Doomscrolling and Dopamine overload',
     body: '',
     cta: 'Hell Yes!',
   },
   {
-    title: "It's time to Snap — Facebook, Instagram, and senseless doom scrolling.",
+    title: "It's time to Snap — Facebook,\u00A0Instagram, and senseless doom scrolling",
     body: '',
     cta: '',
     isThanos: true,
@@ -85,11 +85,13 @@ export default function WebsiteOnboarding({ onComplete }: { onComplete: () => vo
       >
         {isThanos && showThanosSnap ? (
           <div className="flex flex-col items-center space-y-8">
-            <ThanosSnap
-              text={title}
-              onComplete={onComplete}
-              className="text-2xl sm:text-4xl font-bold mb-8 max-w-2xl mx-auto"
-            />
+            <div className="w-full max-w-4xl mx-auto px-4">
+              <ThanosSnap
+                text="It's time to Snap — Facebook, Instagram, and senseless doom scrolling."
+                onComplete={onComplete}
+                className="text-2xl sm:text-4xl font-bold mb-8 inline-block w-full"
+              />
+            </div>
             <div className="relative group mt-12">
               <Image
                 src="/assets/thanossnap.png"
@@ -97,7 +99,6 @@ export default function WebsiteOnboarding({ onComplete }: { onComplete: () => vo
                 width={120}
                 height={120}
                 className="relative mx-auto transition-all duration-[1000ms]"
-                //onClick={handleNext}
               />
             </div>
           </div>
