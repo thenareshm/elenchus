@@ -6,11 +6,6 @@ import ThanosSnap from './utils/ThanosSnap';
 
 const onboardingCards = [
   {
-    title: '💖 Special Thanks to Mahesh Mandla & Lingappa Mandla',
-    body: `This journey wouldn't be possible without them.\n\nTheir love, belief, and unwavering support gave life to Sensebook.\nFrom every click to every connection—you're part of that legacy.`,
-    cta: 'Thanks!!',
-  },
-  {
     title: '🌎 Make Sense of the World',
     body: `You've just entered a space where thoughts aren't shouted—they're shared with purpose.\nAt Sensebook, we believe in calm, clear, compassionate conversation.`,
     cta: 'Next →',
