@@ -35,7 +35,7 @@ export default function LoadingScreen() {
             "& .MuiLinearProgress-bar": {
               backgroundColor: "black"
             }
-          }} /> */ }
+          }} /> */}
       </div>
     </div>
   )
