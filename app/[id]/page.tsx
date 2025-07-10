@@ -1,11 +1,10 @@
 'use client'
 
-import { PostHeader } from '@/components/Post'
-import PostFeed from '@/components/PostFeed'
 import Sidebar from '@/components/Sidebar'
 import SignUpPrompt from '@/components/SignUpPrompt'
 import Widgets from '@/components/Widgets'
-import { ArrowLeftIcon, ArrowUpTrayIcon, ChartBarIcon, ChatBubbleOvalLeftEllipsisIcon, EllipsisHorizontalIcon, HeartIcon } from '@heroicons/react/24/outline'
+import EnhancedComment from '@/components/EnhancedComment'
+import { ArrowLeftIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -33,17 +32,30 @@ interface Comment {
     text: string;
 }
 
+interface Post {
+    name: string;
+    username: string;
+    text: string;
+    likes?: string[];
+    comments?: Comment[];
+}
+
 export default function Page({ params }: PageProps) {
     const { id } = params;
-    const [post, setPost] = useState<any>(null);
+    const [post, setPost] = useState<Post | null>(null);
     const [showOnboarding, setShowOnboarding] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
     const [onboardingComplete, setOnboardingComplete] = useState(false);
     const user = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
-        fetchPost(id).then(setPost);
+        fetchPost(id).then(data => setPost(data as Post));
     }, [id]);
+
+    const handleCommentUpdate = async () => {
+        const updatedPost = await fetchPost(id);
+        setPost(updatedPost as Post);
+    };
 
     // Global click handler for pre-onboarding state
     const handleGlobalClick = (e: MouseEvent) => {
@@ -138,11 +150,11 @@ export default function Page({ params }: PageProps) {
                         </div>
                     
                         {post?.comments?.map((comment: Comment, index: number) => (
-                            <Comment 
+                            <EnhancedComment 
                                 key={index}
-                                name={comment.name} 
-                                username={comment.username}
-                                text={comment.text}
+                                comment={comment}
+                                postId={id}
+                                onCommentUpdate={handleCommentUpdate}
                             />
                         ))}
                     </div>
@@ -156,17 +168,5 @@ export default function Page({ params }: PageProps) {
     );
 }
 
-interface CommentProps {
-    name: string;
-    username: string;
-    text: string;
-}
 
-function Comment({ name, username, text}: CommentProps) {
-    return (
-        <div className="border-b border-gray-100">
-            <PostHeader name={name} username={username} text={text}/>
-        </div>
-    );
-}
   
