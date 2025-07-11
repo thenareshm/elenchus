@@ -7,7 +7,7 @@ import { auth } from '@/firebase';
 import { signOutUser } from '@/redux/slices/userSlice';
 import KickOutCard from './KickOutCard';
 
-const KICKOUT_TIME = 25 * 60; // 25 minutes in seconds
+const KICKOUT_TIME = 2 * 60; // 2 minutes in seconds
 
 const Footer = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -60,10 +60,10 @@ const Footer = () => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           setShowKickOutCard(true);
           
-          // Auto-logout after showing the card for 5 seconds
+          // Auto-logout after showing the card for 7 seconds
           setTimeout(() => {
             handleLogout();
-          }, 5000);
+          }, 7000);
           
           return 0;
         }

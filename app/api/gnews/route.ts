@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 let cache: any = null;
 let lastFetch = 0;
-const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in ms
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hour in ms
 
 export async function GET(req: NextRequest) {
   const now = Date.now();
