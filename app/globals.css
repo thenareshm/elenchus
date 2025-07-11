@@ -2,3 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom pulse animation for HeartbrainIcon */
+@layer utilities {
+  @keyframes pulse-sense {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  }
+
+  .animate-pulse-sense {
+    animation: pulse-sense 2.4s ease-in-out infinite;
+  }
+}

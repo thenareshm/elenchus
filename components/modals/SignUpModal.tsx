@@ -89,12 +89,12 @@ export default function SignUpModal() {
            <Modal open={isOpen} 
              onClose={handleClose}
             className='flex justify-center items-center'>
-                <div className='w-full h-full sm:w-[600px] sm:h-fit bg-white
+                <div className='relative w-full h-full sm:w-[600px] sm:h-fit bg-white
                 sm:rounded-xl outline-none
                 '
                 onClick={(e) => e.stopPropagation()}
                 >
-                    <XMarkIcon className='w-7 mt-5 ms-5 cursor-pointer'
+                    <XMarkIcon className='w-7 h-7 absolute top-5 right-5 cursor-pointer'
                     onClick={handleClose}
                     data-modal-close="true"
                     />
