@@ -51,11 +51,11 @@ export default function LogInModal() {
         className='flex justify-center items-center'
       >
         <div 
-          className='w-full h-full sm:w-[600px] sm:h-fit bg-white sm:rounded-xl outline-none'
+          className='relative w-full h-full sm:w-[600px] sm:h-fit bg-white sm:rounded-xl outline-none'
           onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to overlay
         >
           <XMarkIcon 
-            className='w-7 mt-5 ms-5 cursor-pointer'
+            className='w-7 h-7 absolute top-5 right-5 cursor-pointer'
             onClick={handleClose}
             data-modal-close="true"
           />
