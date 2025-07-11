@@ -1,16 +1,20 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { RootState } from '@/redux/store';
-import PomodoroCard from './PomodoroCard';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/firebase';
+import { signOutUser } from '@/redux/slices/userSlice';
+import KickOutCard from './KickOutCard';
 
-const POMODORO_TIME = 25 * 60; // 25 minutes in seconds
+const KICKOUT_TIME = 2 * 60; // 2 minutes in seconds
 
 const Footer = () => {
   const user = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(POMODORO_TIME);
-  const [showPomodoroCard, setShowPomodoroCard] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(KICKOUT_TIME);
+  const [showKickOutCard, setShowKickOutCard] = useState(false);
 
   // Format time as mm:ss
   const formatTime = (seconds: number) => {
@@ -18,6 +22,17 @@ const Footer = () => {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
+
+  // Handle logout
+  const handleLogout = useCallback(async () => {
+    try {
+      await signOut(auth);
+      dispatch(signOutUser());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  }, [dispatch]);
 
   // Handle scroll visibility
   useEffect(() => {
@@ -34,7 +49,7 @@ const Footer = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle Pomodoro timer
+  // Handle Kick-out timer
   useEffect(() => {
     if (!user.uid) return;
 
@@ -43,7 +58,13 @@ const Footer = () => {
         if (prev <= 1) {
           clearInterval(timer);
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          setShowPomodoroCard(true);
+          setShowKickOutCard(true);
+          
+          // Auto-logout after showing the card for 7 seconds
+          setTimeout(() => {
+            handleLogout();
+          }, 7000);
+          
           return 0;
         }
         return prev - 1;
@@ -51,15 +72,15 @@ const Footer = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [user.uid]);
+  }, [user.uid, handleLogout]);
 
   // Don't render if user is not logged in
   if (!user.uid) return null;
 
   return (
     <>
-      {showPomodoroCard && (
-        <PomodoroCard onClose={() => setShowPomodoroCard(false)} />
+      {showKickOutCard && (
+        <KickOutCard onClose={() => setShowKickOutCard(false)} />
       )}
       <footer 
         className={`fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 py-3 px-4 transition-all duration-300 z-40 ${
@@ -68,8 +89,8 @@ const Footer = () => {
       >
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-600">
           <div className="flex items-center gap-6">
-            {/* Pomodoro Timer */}
-            <div className="font-mono">Flow ⏱️ {formatTime(timeLeft)}</div>
+            {/* Kick-out Timer */}
+            <div className="font-mono">Kick-out ⏱️ {formatTime(timeLeft)}</div>
 
             {/* Social Links */}
             <Link 
