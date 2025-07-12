@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-let cache: any = null;
+let cache: unknown[] | null = null;
 let lastFetch = 0;
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hour in ms
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const now = Date.now();
 
   try {

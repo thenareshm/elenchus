@@ -86,12 +86,12 @@ export default function LogInModal() {
       }));
       
       dispatch(closeLogInModal());
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("❌ Google sign-in error:", error);
       
       // Handle specific popup errors
-      const errorCode = error?.code;
-      const errorMessage = error?.message;
+      const errorCode = (error as {code?: string})?.code;
+      const errorMessage = (error as {message?: string})?.message;
       
       if (errorCode === 'auth/popup-blocked') {
         alert('🚫 Popup was blocked by your browser. Please allow popups for this site and try again.');

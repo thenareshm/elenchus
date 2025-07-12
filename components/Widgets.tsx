@@ -41,7 +41,7 @@ export default function Widgets() {
   return (
     <div className={`p-3 hidden lg:flex flex-col space-y-4 ps-10`} style={{ width: cardWidth }} data-testid="widgets">
       <div className="bg-[#EFF3F4] rounded-xl p-4">
-        <h1 className="text-xl font-bold mb-4">What's Trending</h1>
+        <h1 className="text-xl font-bold mb-4">What&apos;s Trending</h1>
         {error ? (
           <p className="text-sm text-red-500">Failed to load news. Please try again later.</p>
         ) : techNews.length === 0 ? (

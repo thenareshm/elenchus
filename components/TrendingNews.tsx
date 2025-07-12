@@ -43,7 +43,7 @@ export default function TrendingNews() {
       className="bg-gray-100 rounded-2xl shadow p-4 mt-4"
       style={{ width: cardWidth, maxWidth: '100%' }}
     >
-      <h2 className="font-bold text-xl mb-4 text-gray-900">What's Happening</h2>
+      <h2 className="font-bold text-xl mb-4 text-gray-900">What&apos;s Happening</h2>
       {loading ? (
         <div className="text-sm text-gray-400">Loading...</div>
       ) : error ? (

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
 import { closeSignUpModal, openSignUpModal } from '@/redux/slices/modalSlice'
 import { EyeIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, User } from 'firebase/auth'
 import { auth, signInWithGooglePopup } from '@/firebase'
 import { signInUser } from '@/redux/slices/userSlice'
 import Image from 'next/image'
@@ -103,12 +103,12 @@ export default function SignUpModal() {
       }));
       
       dispatch(closeSignUpModal());
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("❌ Google sign-in error:", error);
       
       // Handle specific popup errors
-      const errorCode = error?.code;
-      const errorMessage = error?.message;
+      const errorCode = (error as {code?: string})?.code;
+      const errorMessage = (error as {message?: string})?.message;
       
       if (errorCode === 'auth/popup-blocked') {
         alert('🚫 Popup was blocked by your browser. Please allow popups for this site and try again.');
@@ -130,7 +130,7 @@ export default function SignUpModal() {
   }
 
   useEffect(() => {
-    const unsubscrbie = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscrbie = onAuthStateChanged(auth, (currentUser: User | null) => {
       if(!currentUser) return; 
       console.log(currentUser);
       // Handle redux action
@@ -145,7 +145,7 @@ export default function SignUpModal() {
     })
 
     return unsubscrbie
-  }, [] )
+  }, [dispatch] )
 
   const handleClose = () => {
     dispatch(closeSignUpModal());

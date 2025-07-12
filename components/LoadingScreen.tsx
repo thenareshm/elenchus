@@ -1,7 +1,7 @@
 'use client'
 
 import { RootState } from '@/redux/store'
-import { LinearProgress } from '@mui/material'
+
 import Image from 'next/image'
 import React from 'react'
 import { useSelector } from 'react-redux'
