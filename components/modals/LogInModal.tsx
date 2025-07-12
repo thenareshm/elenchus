@@ -154,8 +154,8 @@ export default function LogInModal() {
             >
               <Image 
                 src="/assets/google-icon.svg" 
-                width={20} 
-                height={20} 
+                width={30} 
+                height={30} 
                 alt="Google icon" 
               />
               {isGoogleLoading ? 'Signing in...' : 'Continue with Google'}
