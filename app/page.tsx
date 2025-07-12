@@ -7,7 +7,7 @@ import PostFeed from '@/components/PostFeed';
 import Sidebar from '@/components/Sidebar';
 import SignUpPrompt from '@/components/SignUpPrompt';
 import Widgets from '@/components/Widgets';
-import WebsiteOnboarding from '@/components/WebsiteOnboarding';
+
 import Footer from '@/components/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -17,7 +17,7 @@ import Head from 'next/head';
 export default function Home() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const [onboardingComplete] = useState(false);
   const [ignoreNextClick, setIgnoreNextClick] = useState(false);
   const user = useSelector((state: RootState) => state.user);
   const modals = useSelector((state: RootState) => state.modals);
@@ -46,7 +46,7 @@ export default function Home() {
       window.addEventListener('click', handleGlobalClick, true);
       return () => window.removeEventListener('click', handleGlobalClick, true);
     }
-  }, [user.username, hasInteracted, showOnboarding]);
+  }, [user.username, hasInteracted, showOnboarding, handleGlobalClick]);
 
   // Handle post-onboarding clicks
   useEffect(() => {
@@ -87,10 +87,7 @@ export default function Home() {
     }
   }, [onboardingComplete, user.username, dispatch, modals, ignoreNextClick]);
 
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-    setOnboardingComplete(true);
-  };
+
 
   // Wrapper component to prevent default behavior until onboarding is complete
   const PreventDefaultWrapper = ({ children }: { children: React.ReactNode }) => {

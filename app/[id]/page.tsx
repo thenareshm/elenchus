@@ -79,7 +79,7 @@ export default function Page({ params }: PageProps) {
             window.addEventListener('click', handleGlobalClick, true);
             return () => window.removeEventListener('click', handleGlobalClick, true);
         }
-    }, [user.username, hasInteracted, showOnboarding]);
+    }, [user.username, hasInteracted, showOnboarding, handleGlobalClick]);
 
     const handleOnboardingComplete = () => {
         setShowOnboarding(false);

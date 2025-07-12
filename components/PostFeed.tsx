@@ -26,7 +26,7 @@ export default function PostFeed() {
      
    })
    return () => unsubscribe()
- }, [])
+ }, [dispatch])
 
 
 

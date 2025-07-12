@@ -17,7 +17,7 @@ export default function ThanosSnap({ text, onComplete, className = '' }: ThanosS
     const container = containerRef.current;
     // Split by words instead of characters
     const words = text.split(' ');
-    const elements = words.map((word, i) => {
+    const elements = words.map((word) => {
       const wordContainer = document.createElement('span');
       wordContainer.style.display = 'inline-block';
       wordContainer.style.whiteSpace = 'nowrap';
