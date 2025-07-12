@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Modal } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
@@ -18,10 +18,37 @@ export default function SignUpModal() {
   const [showPassword, setShowPassword] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
+  // Audio refs
+  const hoverSoundRef = useRef<HTMLAudioElement>(null)
+  const clickSoundRef = useRef<HTMLAudioElement>(null)
+  const startupSoundRef = useRef<HTMLAudioElement>(null)
+
   const isOpen = useSelector(
     (state: RootState) => state.modals.signUpModalOpen 
     );
    const dispatch: AppDispatch = useDispatch();
+
+  // Audio functions
+  const playHoverSound = () => {
+    if (hoverSoundRef.current) {
+      hoverSoundRef.current.currentTime = 0;
+      hoverSoundRef.current.play();
+    }
+  };
+
+  const playClickSound = () => {
+    if (clickSoundRef.current) {
+      clickSoundRef.current.currentTime = 0;
+      clickSoundRef.current.play();
+    }
+  };
+
+  const playStartupSound = () => {
+    if (startupSoundRef.current) {
+      startupSoundRef.current.currentTime = 0;
+      startupSoundRef.current.play();
+    }
+  };
   
    
   async function handleSignUp() {
@@ -43,6 +70,7 @@ export default function SignUpModal() {
       })
     );
 
+    playStartupSound();
   }
   async function handleGuestLogIn() {
       await signInWithEmailAndPassword (
@@ -50,6 +78,7 @@ export default function SignUpModal() {
         "guest4321@gmail.com",
         "12345678"
       );
+      playStartupSound();
     }
 
   async function handleGoogleSignIn(e: React.MouseEvent) {
@@ -77,6 +106,7 @@ export default function SignUpModal() {
       }));
       
       dispatch(closeSignUpModal());
+      playStartupSound();
     } catch (error: any) {
       console.error("❌ Google sign-in error:", error);
       
@@ -146,7 +176,10 @@ export default function SignUpModal() {
                 onClick={(e) => e.stopPropagation()}
                 >
                     <XMarkIcon className='w-7 h-7 absolute top-5 right-5 cursor-pointer'
-                    onClick={handleClose}
+                    onClick={() => {
+                      playClickSound();
+                      handleClose();
+                    }}
                     data-modal-close="true"
                     />
                     <div className="pt-10 pb-20 px-4 sm:px-20">
@@ -193,14 +226,22 @@ export default function SignUpModal() {
                         <button
                         className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md mb-5 w-full"
-                         onClick={() => handleSignUp()}
+                         onMouseEnter={playHoverSound}
+                         onClick={() => {
+                           playClickSound();
+                           handleSignUp();
+                         }}
                          > 
                          Sign up
                         </button>
                         
                         <button
                           className={`bg-white text-black border border-gray-300 h-[48px] rounded-full shadow-md w-full flex items-center justify-center gap-3 hover:bg-gray-50 transition mb-5 ${isGoogleLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          onClick={handleGoogleSignIn}
+                          onMouseEnter={playHoverSound}
+                          onClick={(e) => {
+                            playClickSound();
+                            handleGoogleSignIn(e);
+                          }}
                           type="button"
                           disabled={isGoogleLoading}
                         >
@@ -217,13 +258,22 @@ export default function SignUpModal() {
                       <button
                         className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md w-full"
-                         onClick={() => handleGuestLogIn()}
+                         onMouseEnter={playHoverSound}
+                         onClick={() => {
+                           playClickSound();
+                           handleGuestLogIn();
+                         }}
                          >
                         Log In as Guest
                       </button>
                     </div>
                 </div>
-            </Modal>         
+            </Modal>
+
+            {/* Audio elements */}
+            <audio ref={hoverSoundRef} src="/sounds/hoversound400.mp3" preload="auto" />
+            <audio ref={clickSoundRef} src="/sounds/touchpad.mp3" preload="auto" />
+            <audio ref={startupSoundRef} src="/sounds/startupsound.mp3" preload="auto" />         
     </>
   )
 }
