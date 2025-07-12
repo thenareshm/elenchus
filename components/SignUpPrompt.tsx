@@ -80,7 +80,7 @@ export default function SignUpPrompt() {
 
       {/* Audio Elements */}
       <audio ref={clickAudioRef} src="/sounds/touchpad.mp3" preload="auto" />
-      <audio ref={hoverAudioRef} src="/sounds/hoversound400.mp3" preload="auto" />
+      <audio ref={hoverAudioRef} src="/sounds/hover.wav" preload="auto" />
     </div>
   )
 }

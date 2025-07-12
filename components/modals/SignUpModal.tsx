@@ -18,68 +18,65 @@ export default function SignUpModal() {
   const [showPassword, setShowPassword] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
-  // Audio refs
+  // Audio refs - removed startup sound
   const hoverSoundRef = useRef<HTMLAudioElement>(null)
   const clickSoundRef = useRef<HTMLAudioElement>(null)
-  const startupSoundRef = useRef<HTMLAudioElement>(null)
 
   const isOpen = useSelector(
     (state: RootState) => state.modals.signUpModalOpen 
     );
    const dispatch: AppDispatch = useDispatch();
 
-  // Audio functions
+  // Audio functions - simplified
   const playHoverSound = () => {
     if (hoverSoundRef.current) {
       hoverSoundRef.current.currentTime = 0;
-      hoverSoundRef.current.play();
+      hoverSoundRef.current.play().catch(e => console.log("Hover sound play failed:", e));
     }
   };
 
   const playClickSound = () => {
     if (clickSoundRef.current) {
       clickSoundRef.current.currentTime = 0;
-      clickSoundRef.current.play();
-    }
-  };
-
-  const playStartupSound = () => {
-    if (startupSoundRef.current) {
-      startupSoundRef.current.currentTime = 0;
-      startupSoundRef.current.play();
+      clickSoundRef.current.play().catch(e => console.log("Click sound play failed:", e));
     }
   };
   
    
   async function handleSignUp() {
-    const userCredentials = await createUserWithEmailAndPassword (
-      auth,
-      email,
-      password
-    );
-    await updateProfile(userCredentials.user, {
-      displayName: name,
-    });
+    try {
+      const userCredentials = await createUserWithEmailAndPassword (
+        auth,
+        email,
+        password
+      );
+      await updateProfile(userCredentials.user, {
+        displayName: name,
+      });
 
-    dispatch (
-      signInUser({
-        name: userCredentials.user.displayName,
-        username: userCredentials.user.email!.split("@")[0],
-        email: userCredentials.user.email!,
-        uid: userCredentials.user.uid
-      })
-    );
-
-    playStartupSound();
+      dispatch (
+        signInUser({
+          name: userCredentials.user.displayName,
+          username: userCredentials.user.email!.split("@")[0],
+          email: userCredentials.user.email!,
+          uid: userCredentials.user.uid
+        })
+      );
+    } catch (error) {
+      console.error("❌ Sign up failed:", error);
+    }
   }
   async function handleGuestLogIn() {
+    try {
       await signInWithEmailAndPassword (
         auth,
         "guest4321@gmail.com",
         "12345678"
       );
-      playStartupSound();
+    } catch (error) {
+      console.error("❌ Guest login failed:", error);
     }
+  }
 
   async function handleGoogleSignIn(e: React.MouseEvent) {
     e.preventDefault();
@@ -106,7 +103,6 @@ export default function SignUpModal() {
       }));
       
       dispatch(closeSignUpModal());
-      playStartupSound();
     } catch (error: any) {
       console.error("❌ Google sign-in error:", error);
       
@@ -270,10 +266,9 @@ export default function SignUpModal() {
                 </div>
             </Modal>
 
-            {/* Audio elements */}
-            <audio ref={hoverSoundRef} src="/sounds/hoversound400.mp3" preload="auto" />
-            <audio ref={clickSoundRef} src="/sounds/touchpad.mp3" preload="auto" />
-            <audio ref={startupSoundRef} src="/sounds/startupsound.mp3" preload="auto" />         
+            {/* Audio elements - removed startup sound, updated hover sound */}
+            <audio ref={hoverSoundRef} src="/sounds/hover.wav" preload="auto" />
+            <audio ref={clickSoundRef} src="/sounds/touchpad.mp3" preload="auto" />         
     </>
   )
 }
