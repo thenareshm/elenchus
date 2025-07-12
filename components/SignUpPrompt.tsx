@@ -59,7 +59,7 @@ export default function SignUpPrompt() {
           }}
           onMouseEnter={playHoverSound}
           title="Sign Up"
-          className="absolute right-0 top-0 w-1/2 h-full rounded-r-full z-20 
+          className="absolute right-0 top-0 w-1/2 h-full rounded-r-full z-5 
           text-sm font-bold text-black hover:bg-white/10 transition pl-4 flex items-center justify-center"
         >
           Sign Up
