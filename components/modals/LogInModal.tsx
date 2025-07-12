@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Modal } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
@@ -17,21 +17,48 @@ export default function LogInModal() {
   const [password, setPassword] = useState('')
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
+  // Audio refs - removed startup sound
+  const hoverSoundRef = useRef<HTMLAudioElement>(null)
+  const clickSoundRef = useRef<HTMLAudioElement>(null)
+
   const isOpen = useSelector(
     (state: RootState) => state.modals.logInModalOpen 
   );
   const dispatch: AppDispatch = useDispatch();
+
+  // Audio functions - simplified
+  const playHoverSound = () => {
+    if (hoverSoundRef.current) {
+      hoverSoundRef.current.currentTime = 0;
+      hoverSoundRef.current.play().catch(e => console.log("Hover sound play failed:", e));
+    }
+  };
+
+  const playClickSound = () => {
+    if (clickSoundRef.current) {
+      clickSoundRef.current.currentTime = 0;
+      clickSoundRef.current.play().catch(e => console.log("Click sound play failed:", e));
+    }
+  };
   
   async function handleLogIn() {
-    await signInWithEmailAndPassword(auth, email, password)
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("❌ Login failed:", error);
+    }
   }
 
   async function handleGuestLogIn() {
-    await signInWithEmailAndPassword(
-      auth,
-      "guest@gmail.com",
-      "12345678"
-    );
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        "guest@gmail.com",
+        "12345678"
+      );
+    } catch (error) {
+      console.error("❌ Guest login failed:", error);
+    }
   }
 
   async function handleGoogleSignIn(e: React.MouseEvent) {
@@ -110,7 +137,10 @@ export default function LogInModal() {
         >
           <XMarkIcon 
             className='w-7 h-7 absolute top-5 right-5 cursor-pointer'
-            onClick={handleClose}
+            onClick={() => {
+              playClickSound();
+              handleClose();
+            }}
             data-modal-close="true"
           />
           <div className="pt-10 pb-20 px-4 sm:px-20">
@@ -141,14 +171,22 @@ export default function LogInModal() {
             </div>
             <button
               className="bg-[#C0BAB5] text-white h-[48px] rounded-full shadow-md mb-5 w-full"
-              onClick={() => handleLogIn()}
+              onMouseEnter={playHoverSound}
+              onClick={() => {
+                playClickSound();
+                handleLogIn();
+              }}
             > 
               Log In
             </button>
             
             <button
               className={`bg-white text-black border border-gray-300 h-[48px] rounded-full shadow-md w-full flex items-center justify-center gap-3 hover:bg-gray-50 transition mb-5 ${isGoogleLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-              onClick={handleGoogleSignIn}
+              onMouseEnter={playHoverSound}
+              onClick={(e) => {
+                playClickSound();
+                handleGoogleSignIn(e);
+              }}
               type="button"
               disabled={isGoogleLoading}
             >
@@ -164,13 +202,21 @@ export default function LogInModal() {
             <span className='mb-5 text-sm text-center block'>Or</span>
             <button
               className="bg-[#C0BAB5] text-white h-[48px] rounded-full shadow-md w-full"
-              onClick={() => handleGuestLogIn()}
+              onMouseEnter={playHoverSound}
+              onClick={() => {
+                playClickSound();
+                handleGuestLogIn();
+              }}
             > 
               Log In as Guest
             </button>
           </div>
         </div>
-      </Modal>         
+      </Modal>
+
+      {/* Audio elements - removed startup sound, updated hover sound */}
+      <audio ref={hoverSoundRef} src="/sounds/hover.wav" preload="auto" />
+      <audio ref={clickSoundRef} src="/sounds/touchpad.mp3" preload="auto" />         
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Modal } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/redux/store'
@@ -18,39 +18,65 @@ export default function SignUpModal() {
   const [showPassword, setShowPassword] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
+  // Audio refs - removed startup sound
+  const hoverSoundRef = useRef<HTMLAudioElement>(null)
+  const clickSoundRef = useRef<HTMLAudioElement>(null)
+
   const isOpen = useSelector(
     (state: RootState) => state.modals.signUpModalOpen 
     );
    const dispatch: AppDispatch = useDispatch();
+
+  // Audio functions - simplified
+  const playHoverSound = () => {
+    if (hoverSoundRef.current) {
+      hoverSoundRef.current.currentTime = 0;
+      hoverSoundRef.current.play().catch(e => console.log("Hover sound play failed:", e));
+    }
+  };
+
+  const playClickSound = () => {
+    if (clickSoundRef.current) {
+      clickSoundRef.current.currentTime = 0;
+      clickSoundRef.current.play().catch(e => console.log("Click sound play failed:", e));
+    }
+  };
   
    
   async function handleSignUp() {
-    const userCredentials = await createUserWithEmailAndPassword (
-      auth,
-      email,
-      password
-    );
-    await updateProfile(userCredentials.user, {
-      displayName: name,
-    });
+    try {
+      const userCredentials = await createUserWithEmailAndPassword (
+        auth,
+        email,
+        password
+      );
+      await updateProfile(userCredentials.user, {
+        displayName: name,
+      });
 
-    dispatch (
-      signInUser({
-        name: userCredentials.user.displayName,
-        username: userCredentials.user.email!.split("@")[0],
-        email: userCredentials.user.email!,
-        uid: userCredentials.user.uid
-      })
-    );
-
+      dispatch (
+        signInUser({
+          name: userCredentials.user.displayName,
+          username: userCredentials.user.email!.split("@")[0],
+          email: userCredentials.user.email!,
+          uid: userCredentials.user.uid
+        })
+      );
+    } catch (error) {
+      console.error("❌ Sign up failed:", error);
+    }
   }
   async function handleGuestLogIn() {
+    try {
       await signInWithEmailAndPassword (
         auth,
         "guest4321@gmail.com",
         "12345678"
       );
+    } catch (error) {
+      console.error("❌ Guest login failed:", error);
     }
+  }
 
   async function handleGoogleSignIn(e: React.MouseEvent) {
     e.preventDefault();
@@ -146,7 +172,10 @@ export default function SignUpModal() {
                 onClick={(e) => e.stopPropagation()}
                 >
                     <XMarkIcon className='w-7 h-7 absolute top-5 right-5 cursor-pointer'
-                    onClick={handleClose}
+                    onClick={() => {
+                      playClickSound();
+                      handleClose();
+                    }}
                     data-modal-close="true"
                     />
                     <div className="pt-10 pb-20 px-4 sm:px-20">
@@ -193,14 +222,22 @@ export default function SignUpModal() {
                         <button
                         className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md mb-5 w-full"
-                         onClick={() => handleSignUp()}
+                         onMouseEnter={playHoverSound}
+                         onClick={() => {
+                           playClickSound();
+                           handleSignUp();
+                         }}
                          > 
                          Sign up
                         </button>
                         
                         <button
                           className={`bg-white text-black border border-gray-300 h-[48px] rounded-full shadow-md w-full flex items-center justify-center gap-3 hover:bg-gray-50 transition mb-5 ${isGoogleLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          onClick={handleGoogleSignIn}
+                          onMouseEnter={playHoverSound}
+                          onClick={(e) => {
+                            playClickSound();
+                            handleGoogleSignIn(e);
+                          }}
                           type="button"
                           disabled={isGoogleLoading}
                         >
@@ -217,13 +254,21 @@ export default function SignUpModal() {
                       <button
                         className="bg-[#C0BAB5] text-white h-[48px]
                          rounded-full shadow-md w-full"
-                         onClick={() => handleGuestLogIn()}
+                         onMouseEnter={playHoverSound}
+                         onClick={() => {
+                           playClickSound();
+                           handleGuestLogIn();
+                         }}
                          >
                         Log In as Guest
                       </button>
                     </div>
                 </div>
-            </Modal>         
+            </Modal>
+
+            {/* Audio elements - removed startup sound, updated hover sound */}
+            <audio ref={hoverSoundRef} src="/sounds/hover.wav" preload="auto" />
+            <audio ref={clickSoundRef} src="/sounds/touchpad.mp3" preload="auto" />         
     </>
   )
 }
