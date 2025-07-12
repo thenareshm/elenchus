@@ -7,14 +7,16 @@ import { AppDispatch, RootState } from '@/redux/store'
 import { closeSignUpModal, openSignUpModal } from '@/redux/slices/modalSlice'
 import { EyeIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { auth } from '@/firebase'
+import { auth, signInWithGooglePopup } from '@/firebase'
 import { signInUser } from '@/redux/slices/userSlice'
+import Image from 'next/image'
 
 export default function SignUpModal() {
   const [name, setName] = useState('') 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
   const isOpen = useSelector(
     (state: RootState) => state.modals.signUpModalOpen 
@@ -50,7 +52,56 @@ export default function SignUpModal() {
       );
     }
 
-
+  async function handleGoogleSignIn(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isGoogleLoading) return;
+    
+    setIsGoogleLoading(true);
+    
+    try {
+      console.log("🚀 Starting Google Sign-In popup...");
+      
+      // Use our custom popup function
+      const result = await signInWithGooglePopup();
+      const user = result.user;
+      
+      console.log("✅ Google Sign-In successful:", user);
+      
+      dispatch(signInUser({
+        name: user.displayName || user.email?.split("@")[0] || "Unknown User",
+        username: user.email?.split("@")[0] || "unknown",
+        email: user.email || "",
+        uid: user.uid,
+      }));
+      
+      dispatch(closeSignUpModal());
+    } catch (error: any) {
+      console.error("❌ Google sign-in error:", error);
+      
+      // Handle specific popup errors
+      const errorCode = error?.code;
+      const errorMessage = error?.message;
+      
+      if (errorCode === 'auth/popup-blocked') {
+        alert('🚫 Popup was blocked by your browser. Please allow popups for this site and try again.');
+      } else if (errorCode === 'auth/popup-closed-by-user') {
+        console.log('ℹ️ Popup was closed by user');
+      } else if (errorCode === 'auth/cancelled-popup-request') {
+        console.log('ℹ️ Another popup request was cancelled');
+      } else if (errorCode === 'auth/network-request-failed') {
+        alert('🌐 Network error. Please check your connection and try again.');
+      } else if (errorCode === 'auth/too-many-requests') {
+        alert('⏰ Too many attempts. Please wait a moment and try again.');
+      } else {
+        console.error('Full error details:', { errorCode, errorMessage });
+        alert('❌ Sign-in failed. Please try again.');
+      }
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  }
 
   useEffect(() => {
     const unsubscrbie = onAuthStateChanged(auth, (currentUser) => {
@@ -141,11 +192,27 @@ export default function SignUpModal() {
                       </div>
                         <button
                         className="bg-[#C0BAB5] text-white h-[48px]
-                         rounded-full shadow-md md-5 w-full"
+                         rounded-full shadow-md mb-5 w-full"
                          onClick={() => handleSignUp()}
                          > 
                          Sign up
                         </button>
+                        
+                        <button
+                          className={`bg-white text-black border border-gray-300 h-[48px] rounded-full shadow-md w-full flex items-center justify-center gap-3 hover:bg-gray-50 transition mb-5 ${isGoogleLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          onClick={handleGoogleSignIn}
+                          type="button"
+                          disabled={isGoogleLoading}
+                        >
+                          <Image 
+                            src="/assets/google-icon.svg" 
+                            width={20} 
+                            height={20} 
+                            alt="Google icon" 
+                          />
+                          {isGoogleLoading ? 'Signing in...' : 'Continue with Google'}
+                        </button>
+                        
                         <span className='mb-5 text-sm text-center block'>Or</span>
                       <button
                         className="bg-[#C0BAB5] text-white h-[48px]

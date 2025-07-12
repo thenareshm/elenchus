@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, connectAuthEmulator } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import App from "next/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,5 +18,30 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth()
-export const db = getFirestore()
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Configure Google Auth Provider specifically for popup
+export const provider = new GoogleAuthProvider();
+
+// Force popup behavior by setting custom parameters
+provider.setCustomParameters({
+  prompt: "select_account",
+  // Force popup mode
+  display: "popup",
+  // Prevent redirect
+  ux_mode: "popup"
+});
+
+// Add required scopes
+provider.addScope('email');
+provider.addScope('profile');
+provider.addScope('openid');
+
+// Export a function to ensure popup behavior
+export const signInWithGooglePopup = async () => {
+  // Import dynamically to avoid SSR issues
+  const { signInWithPopup } = await import('firebase/auth');
+  
+  return signInWithPopup(auth, provider);
+};
