@@ -10,6 +10,7 @@ import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
 import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
+import { HeartIcon } from "@heroicons/react/24/solid";
 
 import HeartbrainIcon from '@/components/icons/HeartbrainIcon';
 
@@ -192,9 +193,9 @@ export default function Post({data, id }: PostProps) {
         <div className="relative">
           { 
             data.likes.includes(user.uid) ?
-            <HeartbrainIcon
+            <HeartIcon
             className="w-[24px] h-[24px] cursor-pointer
-            text-red-500 transition
+            text-gray-400 transition
             "
             onClick={() => likePost()}
             />:
