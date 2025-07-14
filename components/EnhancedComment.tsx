@@ -179,6 +179,7 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate }: En
                 rows={3}
                 placeholder="Edit your comment..."
                 disabled={isLoading}
+                maxLength={1000}
               />
               <div className="flex space-x-2">
                 <button

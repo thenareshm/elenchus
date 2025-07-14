@@ -71,6 +71,7 @@ export default function PostInput({insideModal}: PostInputProps) {
           placeholder={insideModal ? "Send your reply" : "Start with a #hashtag from trending... What makes sense!"}
           onChange={(event) => setText(event.target.value)}
           value={text}
+          maxLength={1000}
         />
       
         <div className="flex justify-between pt-5 border-t border-gray-100">

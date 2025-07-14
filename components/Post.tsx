@@ -374,6 +374,7 @@ export function PostHeader({
               className="w-full p-3 border border-gray-300 rounded-md resize-none min-h-[80px] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
               placeholder="What's happening?"
               disabled={isLoading}
+              maxLength={1000}
             />
             <div className="flex justify-end space-x-2">
               <button
