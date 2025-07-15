@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import TiltedCard from './TiltedCard';
 
 interface EntertainmentArticle {
   title: string;
@@ -47,24 +48,35 @@ export default function EntertainmentNews() {
         <ul className="space-y-3">
           {entertainmentNews.map((item, idx) => (
             <li key={item.url + idx}>
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-3 hover:bg-gray-200 transition"
-                style={{ textDecoration: 'none' }}
+              <TiltedCard
+                containerHeight="auto"
+                containerWidth="100%"
+                imageHeight="auto"
+                imageWidth="100%"
+                scaleOnHover={1.05}
+                rotateAmplitude={8}
+                showMobileWarning={false}
+                showTooltip={false}
               >
-                <div className="font-bold text-[15px] text-gray-900 leading-tight">
-                  {toHashtag(item.title)}
-                </div>
-                <div className="block text-[15px] font-normal text-gray-900 mt-1" style={{ wordBreak: "break-word" }}>
-                  {item.title}
-                </div>
-                {item.description && (
-                  <div className="text-xs text-gray-600 mt-1 leading-tight">{item.description}</div>
-                )}
-                <div className="text-xs text-gray-500 mt-1">{item.source?.name}</div>
-              </a>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl p-3 hover:bg-gray-200 transition"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <div className="font-bold text-[15px] text-gray-900 leading-tight">
+                    {toHashtag(item.title)}
+                  </div>
+                  <div className="block text-[15px] font-normal text-gray-900 mt-1" style={{ wordBreak: "break-word" }}>
+                    {item.title}
+                  </div>
+                  {item.description && (
+                    <div className="text-xs text-gray-600 mt-1 leading-tight">{item.description}</div>
+                  )}
+                  <div className="text-xs text-gray-500 mt-1">{item.source?.name}</div>
+                </a>
+              </TiltedCard>
             </li>
           ))}
         </ul>
