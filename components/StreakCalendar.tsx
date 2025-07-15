@@ -176,7 +176,7 @@ const StreakCalendar: React.FC<StreakCalendarProps> = ({ uid }) => {
               {!loading && loggedIn && (
                 <FireIcon 
                   className={`absolute w-4 h-4 ${
-                    isCurrent ? 'text-gray-400' : 'text-gray-300'
+                    isCurrent ? 'text-gray-400' : 'text-gray-400'
                   }`} 
                 />
               )}
