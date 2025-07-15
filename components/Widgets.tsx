@@ -1,5 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import StreakCalendar from './StreakCalendar';
 
 interface TechArticle {
   title: string;
@@ -13,6 +16,7 @@ const cardWidth = "400px"; // adjust as needed!
 export default function Widgets() {
   const [techNews, setTechNews] = useState<TechArticle[]>([]);
   const [error, setError] = useState(false);
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const fetchTechNews = async () => {
@@ -40,6 +44,7 @@ export default function Widgets() {
 
   return (
     <div className={`p-3 hidden lg:flex flex-col space-y-4 ps-10`} style={{ width: cardWidth }} data-testid="widgets">
+      <StreakCalendar uid={user?.uid ?? null} />
       <div className="bg-[#EFF3F4] rounded-xl p-4">
         <h1 className="text-xl font-bold mb-4">What&apos;s Trending</h1>
         {error ? (
