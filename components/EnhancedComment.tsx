@@ -8,19 +8,21 @@ import { doc, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { PencilIcon, TrashIcon, CheckIcon, XMarkIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 
-interface Comment {
+export interface Comment {
   name: string;
   username: string;
   text: string;
+  replies?: Comment[];
 }
 
 interface EnhancedCommentProps {
   comment: Comment;
   postId: string;
   onCommentUpdate?: () => void;
+  disableActions?: boolean;
 }
 
-export default function EnhancedComment({ comment, postId, onCommentUpdate }: EnhancedCommentProps) {
+export default function EnhancedComment({ comment, postId, onCommentUpdate, disableActions = false }: EnhancedCommentProps) {
   const user = useSelector((state: RootState) => state.user);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
@@ -133,7 +135,7 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate }: En
             </div>
 
             {/* Three-dot menu for comment owner */}
-            {isOwner && !isEditing && (
+            {isOwner && !isEditing && !disableActions && (
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
