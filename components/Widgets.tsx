@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import EntertainmentNews from "./EntertainmentNews";
 
 interface TechArticle {
   title: string;
@@ -73,6 +74,9 @@ export default function Widgets() {
           </ul>
         )}
       </div>
+      
+      {/* Entertainment News Widget below tech news */}
+      <EntertainmentNews />
     </div>
   );
 }
