@@ -3,16 +3,38 @@
 import { closeCommentModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
 import { Modal } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PostHeader } from "../Post";
 import PostInput from "../PostInput";
+import ThreadedComment from "../ThreadedComment";
+import type { Comment } from "../EnhancedComment";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
 export default function CommentModal() {
   const open = useSelector((state: RootState) => state.modals.commentModalOpen);
   const commentDetails = useSelector((state: RootState) => state.modals.commentPostDetails);
   const dispatch = useDispatch();
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  const fetchComments = useCallback(async () => {
+    if (!commentDetails.id) return;
+    const postRef = doc(db, 'posts', commentDetails.id);
+    const snap = await getDoc(postRef);
+    setComments((snap.data()?.comments || []) as Comment[]);
+  }, [commentDetails.id]);
+
+  useEffect(() => {
+    if (open) {
+      fetchComments();
+    }
+  }, [open, fetchComments]);
+
+  const handleCommentUpdate = async () => {
+    await fetchComments();
+  };
 
   return (
     <>
@@ -37,8 +59,17 @@ export default function CommentModal() {
                 <div className="mt-4">
                     <PostInput
                       insideModal={true}
+                      onCommentSent={handleCommentUpdate}
                     />
                 </div>
+                {comments.map((comment, idx) => (
+                  <ThreadedComment
+                    key={idx}
+                    comment={comment}
+                    postId={commentDetails.id}
+                    onCommentUpdate={handleCommentUpdate}
+                  />
+                ))}
                 <div className="absolute w-0.5 h-32 bg-gray-300
                 left-[33px] sm:left-[53px] top-20 z-0
                 "></div>

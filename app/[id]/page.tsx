@@ -3,11 +3,11 @@
 import Sidebar from '@/components/Sidebar'
 import SignUpPrompt from '@/components/SignUpPrompt'
 import Widgets from '@/components/Widgets'
-import EnhancedComment from '@/components/EnhancedComment'
+import ThreadedComment from '@/components/ThreadedComment'
 import { ArrowLeftIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { db } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore'
 import { useSelector } from 'react-redux'
@@ -30,6 +30,7 @@ interface Comment {
     name: string;
     username: string;
     text: string;
+    replies?: Comment[];
 }
 
 interface Post {
@@ -58,11 +59,11 @@ export default function Page({ params }: PageProps) {
     };
 
     // Global click handler for pre-onboarding state
-    const handleGlobalClick = (e: MouseEvent) => {
+    const handleGlobalClick = useCallback((e: MouseEvent) => {
         if (!user.username && !hasInteracted) {
             const target = e.target as HTMLElement;
             const isLoadingScreen = target.closest('#loading-screen');
-            
+
             // Only ignore loading screen clicks
             if (!isLoadingScreen) {
                 e.preventDefault();
@@ -71,7 +72,7 @@ export default function Page({ params }: PageProps) {
                 setHasInteracted(true);
             }
         }
-    };
+    }, [user.username, hasInteracted]);
 
     // Add global click listener
     useEffect(() => {
@@ -150,7 +151,7 @@ export default function Page({ params }: PageProps) {
                         </div>
                     
                         {post?.comments?.map((comment: Comment, index: number) => (
-                            <EnhancedComment 
+                            <ThreadedComment
                                 key={index}
                                 comment={comment}
                                 postId={id}

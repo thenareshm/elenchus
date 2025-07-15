@@ -10,10 +10,11 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface PostInputProps {
-  insideModal?: boolean
+  insideModal?: boolean;
+  onCommentSent?: () => void;
 }
 
-export default function PostInput({insideModal}: PostInputProps) {
+export default function PostInput({insideModal, onCommentSent}: PostInputProps) {
   const [text, setText] = useState("")
   const user = useSelector((state: RootState) => state.user);
   const commentDetails = useSelector((state: RootState) => state.modals.commentPostDetails);
@@ -47,10 +48,12 @@ export default function PostInput({insideModal}: PostInputProps) {
         name: user.name,
         username: user.username,
         text: text,
+        replies: []
       })
     })
     setText("");
     dispatch(closeCommentModal())
+    onCommentSent?.();
 
   }
 
