@@ -3,13 +3,41 @@
 import { RootState } from '@/redux/store'
 
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 export default function LoadingScreen() {
     const loadingScreenOpen = useSelector((state: RootState) =>
     state.loading.loadingScreenOpen
 )
+
+    const loadingSteps = [
+        "Sensing the world's signals",
+        'Analyzing opinions',
+        'Loading trending discussions',
+        'Ready to Sense.'
+    ]
+
+    const [step, setStep] = useState(0)
+
+    useEffect(() => {
+        if (!loadingScreenOpen) {
+            setStep(0)
+            return
+        }
+
+        let current = 0
+        const interval = setInterval(() => {
+            current += 1
+            if (current < loadingSteps.length) {
+                setStep(current)
+            } else {
+                clearInterval(interval)
+            }
+        }, 500)
+
+        return () => clearInterval(interval)
+    }, [loadingScreenOpen])
       
 
   return (
@@ -28,10 +56,12 @@ export default function LoadingScreen() {
           Sensebook
         </h1>
 
-        {/* 👇 Caption with fade-in animation */}
-        <p className="text-gray-600 text-center text-base opacity-0 animate-fade-in mt-2 max-w-sm [animation-delay:.5s]">
-          Where emotions meet expression.
-        </p>
+        <h1
+          key={step}
+          className={`loading-message ${step === loadingSteps.length - 1 ? 'final' : ''} text-2xl sm:text-3xl font-semibold text-center text-[#C0BAB5] transition-opacity duration-500 opacity-0 animate-fade-in mt-2`}
+        >
+          {loadingSteps[step]}
+        </h1>
          {/*<LinearProgress
           sx={{
             width: 265,

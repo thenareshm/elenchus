@@ -34,4 +34,22 @@
   .animate-fade-in {
     animation: fade-in 1.2s ease-out forwards;
   }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+
+  .loading-message::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    animation: dots 1.5s steps(3, end) infinite;
+  }
+
+  .loading-message.final::after {
+    animation: none;
+    content: '';
+  }
 }
