@@ -30,7 +30,7 @@ export default function LoadingScreen() {
 
         {/* 👇 Caption with fade-in animation */}
         <p className="text-gray-600 text-center text-base opacity-0 animate-fade-in mt-2 max-w-sm [animation-delay:.5s]">
-          Where emotions meet expression.
+          Not just social—emotionally intelligent.
         </p>
          {/*<LinearProgress
           sx={{

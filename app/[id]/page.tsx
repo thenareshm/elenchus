@@ -203,9 +203,9 @@ export default function Page({ params }: PageProps) {
                     <div className="flex-grow max-w-2xl border-x border-gray-100 flex flex-col min-h-screen">
                         <div className="py-4 px-3 text-lg sm:text-xl sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-sm font-bold border-b border-gray-100 flex items-center flex-shrink-0">
                             <Link href="/" onClick={(e) => !onboardingComplete && !user.username && e.preventDefault()}>
-                                <ArrowLeftIcon className="w-5 h-5 mr-10"/>
+                                <ArrowLeftIcon className="w-5 h-5 mr-2"/>
                             </Link>
-                            Sense Thread 
+                        Thread 
                         </div>
 
                         <div className='flex flex-col p-3 space-y-5 border-b border-gray-100 flex-shrink-0'>
@@ -227,7 +227,7 @@ export default function Page({ params }: PageProps) {
                                         </span>
                                     </div>
                                 </div>
-                                <EllipsisHorizontalIcon className='w-5 h-5'/>
+                                
                             </div>
                             <span className='text-{15px]'>{post?.text}</span>    
                         </div>
