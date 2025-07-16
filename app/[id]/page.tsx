@@ -4,10 +4,10 @@ import Sidebar from '@/components/Sidebar'
 import SignUpPrompt from '@/components/SignUpPrompt'
 import Widgets from '@/components/Widgets'
 import EnhancedComment from '@/components/EnhancedComment'
-import { ArrowLeftIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { db } from '@/firebase';
 import { doc, getDoc, Timestamp } from 'firebase/firestore'
 import { useSelector } from 'react-redux'
@@ -62,7 +62,7 @@ export default function Page({ params }: PageProps) {
         fetchPost(id).then(data => setPost(data as Post));
     }, [id]);
 
-    const handleCommentUpdate = async (shouldScroll = false) => {
+    const handleCommentUpdate = useCallback(async (shouldScroll = false) => {
         try {
             const updatedPost = await fetchPost(id);
             setPost(updatedPost as Post);
@@ -83,7 +83,7 @@ export default function Page({ params }: PageProps) {
         } catch (error) {
             console.error("Error updating comments:", error);
         }
-    };
+    }, [id]);
 
     // Listen for comment modal updates to sync optimistic updates
     useEffect(() => {
@@ -138,7 +138,7 @@ export default function Page({ params }: PageProps) {
 
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
-    }, [id]);
+    }, [id, handleCommentUpdate]);
 
     // Combine real comments with optimistic ones, using unique IDs to prevent duplicates
     const allComments = [
@@ -153,7 +153,7 @@ export default function Page({ params }: PageProps) {
     ];
 
     // Global click handler for pre-onboarding state
-    const handleGlobalClick = (e: MouseEvent) => {
+    const handleGlobalClick = useCallback((e: MouseEvent) => {
         if (!user.username && !hasInteracted) {
             const target = e.target as HTMLElement;
             const isLoadingScreen = target.closest('#loading-screen');
@@ -166,7 +166,7 @@ export default function Page({ params }: PageProps) {
                 setHasInteracted(true);
             }
         }
-    };
+    }, [user.username, hasInteracted, setShowOnboarding, setHasInteracted]);
 
     // Add global click listener
     useEffect(() => {

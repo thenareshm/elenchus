@@ -13,7 +13,7 @@ import { db } from "@/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { closeCommentModal } from "@/redux/slices/modalSlice";
 import { RootState } from "@/redux/store";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PostInput from "../PostInput";
 
@@ -41,20 +41,19 @@ export default function CommentModal() {
 
   // Ref for auto-scrolling to latest comment
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const latestCommentRef = useRef<HTMLDivElement>(null);
 
   // === Firestore helpers ===
   const postRef = commentPostDetails.id
     ? doc(db, "posts", commentPostDetails.id)
     : null;
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     if (!postRef) return;
     const snap = await getDoc(postRef);
     const data = snap.data();
     setComments((data?.comments as Comment[]) ?? []);
     setLoading(false);
-  };
+  }, [postRef]);
 
   const handleOptimisticUpdate = async (newComment: Comment) => {
     // Create unique identifier for this comment using crypto.randomUUID if available, fallback to timestamp
@@ -325,7 +324,7 @@ export default function CommentModal() {
 
   useEffect(() => {
     if (commentModalOpen) fetchComments();
-  }, [commentModalOpen]);
+  }, [commentModalOpen, fetchComments]);
 
   if (!commentModalOpen) return null;
 
@@ -426,7 +425,7 @@ function CommentThread({
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [userPostedReply, setUserPostedReply] = useState(false); // Track if user posted a reply
+
   
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isOwner = user.username === comment.username;
@@ -613,9 +612,7 @@ function CommentThread({
                   onClick={() => {
                     // If user posted a reply, allow toggling but don't auto-hide
                     setShowReplies(!showReplies);
-                    if (!showReplies) {
-                      setUserPostedReply(false); // Reset when manually expanding
-                    }
+
                   }}
                 >
                   {showReplies
@@ -641,7 +638,6 @@ function CommentThread({
                     onReply(comment, txt, reset, () => {
                       // Keep replies expanded when user posts
                       setShowReplies(true);
-                      setUserPostedReply(true);
                     });
                     setShowInput(false);
                   }}

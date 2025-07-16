@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import LoadingScreen from '@/components/LoadingScreen';
 import CommentModal from '@/components/modals/CommentModal';
 import PostFeed from '@/components/PostFeed';
@@ -31,7 +31,7 @@ export default function Home() {
   };
 
   // Global click handler for pre-onboarding state
-  const handleGlobalClick = (e: MouseEvent) => {
+  const handleGlobalClick = useCallback((e: MouseEvent) => {
     if (!user.username && !hasInteracted) {
       const target = e.target as HTMLElement;
       const isLoadingScreen = target.closest('#loading-screen');
@@ -44,7 +44,7 @@ export default function Home() {
         setHasInteracted(true);
       }
     }
-  };
+  }, [user.username, hasInteracted, setShowOnboarding, setHasInteracted]);
 
   // Add global click listener
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function Home() {
       window.addEventListener('click', handleGlobalClick, true);
       return () => window.removeEventListener('click', handleGlobalClick, true);
     }
-  }, [user.username, hasInteracted, showOnboarding]);
+  }, [user.username, hasInteracted, showOnboarding, handleGlobalClick]);
 
   // Handle post-onboarding clicks
   useEffect(() => {

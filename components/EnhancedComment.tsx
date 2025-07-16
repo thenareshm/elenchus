@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { doc, updateDoc, getDoc, Timestamp } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { PencilIcon, TrashIcon, CheckIcon, XMarkIcon, EllipsisHorizontalIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
+import { PencilIcon, TrashIcon, EllipsisHorizontalIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Comment {
@@ -37,7 +37,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
   const [showReplies, setShowReplies] = useState(false); // Hidden by default for progressive disclosure
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState('');
-  const [userPostedReply, setUserPostedReply] = useState(false); // Track if user posted a reply
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isOwner = user.username === comment.username;
@@ -55,16 +54,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [showDropdown]);
-
-  const fetchCommentsAndUpdate = async () => {
-    const postRef = doc(db, "posts", postId);
-    const snap = await getDoc(postRef);
-    const data = snap.data();
-    const comments = (data?.comments as Comment[]) ?? [];
-    
-    await updateDoc(postRef, { comments });
-    onCommentUpdate?.();
-  };
 
   const editComment = async (targetComment: Comment, newText: string, allComments: Comment[]): Promise<Comment[]> => {
     const updateCommentInList = (list: Comment[]): Comment[] =>
@@ -97,25 +86,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
     return removeCommentFromList(allComments);
   };
 
-  const addReply = async (parentComment: Comment, replyText: string, allComments: Comment[]): Promise<Comment[]> => {
-    const newReply: Comment = {
-      name: user.name,
-      username: user.username,
-      text: replyText.trim(),
-      timestamp: Timestamp.now(),
-      replies: [],
-    };
-
-    const addReplyToList = (list: Comment[]): Comment[] =>
-      list.map((c) =>
-        c === parentComment
-          ? { ...c, replies: [...(c.replies ?? []), newReply] }
-          : { ...c, replies: addReplyToList(c.replies ?? []) }
-      );
-
-    return addReplyToList(allComments);
-  };
-
   const handleEdit = () => {
     setIsEditing(true);
     setEditText(comment.text);
@@ -134,11 +104,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
     setIsLoading(true);
     
     try {
-      // Optimistic update - show changes immediately
-      const optimisticComment = { ...comment, text: editText.trim() };
-      // We'll rely on the parent component to handle the optimistic state
-      // For now, just show loading state
-      
       const postRef = doc(db, "posts", postId);
       const snap = await getDoc(postRef);
       const data = snap.data();
@@ -167,9 +132,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
     setIsLoading(true);
     
     try {
-      // Optimistic update - hide comment immediately for better UX
-      // The parent will handle the actual state management
-      
       const postRef = doc(db, "posts", postId);
       const snap = await getDoc(postRef);
       const data = snap.data();
@@ -182,7 +144,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
       onCommentUpdate?.();
     } catch (error) {
       console.error("Error deleting comment:", error);
-      // Could show error state here
     } finally {
       setIsLoading(false);
     }
@@ -205,16 +166,11 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
       replies: [],
     };
 
-    // Create unique identifier for optimistic update
-    const replyId = crypto.randomUUID ? crypto.randomUUID() : `${user.username}-${Date.now()}-${Math.random()}`;
-    const optimisticReply = { ...newReply, isOptimistic: true, optimisticId: replyId };
-
     try {
       // Show immediate feedback to user
       setReplyText('');
       setShowReplyInput(false);
       setShowReplies(true);
-      setUserPostedReply(true);
       
       // The optimistic update will be handled by the parent component's refresh
       // For thread page, trigger immediate update with optimistic data
@@ -255,7 +211,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
       
     } catch (error) {
       console.error("Error adding reply:", error);
-      // On error, could show error state or revert optimistic update
     } finally {
       setIsLoading(false);
     }
@@ -376,9 +331,6 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
                   onClick={() => {
                     // If user posted a reply, allow toggling but don't auto-hide
                     setShowReplies(!showReplies);
-                    if (!showReplies) {
-                      setUserPostedReply(false); // Reset when manually expanding
-                    }
                   }}
                 >
                   {showReplies
