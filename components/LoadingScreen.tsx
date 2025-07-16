@@ -24,9 +24,14 @@ export default function LoadingScreen() {
           alt="sense book Logo"
           className='mb-5'
         />
-        <h1 className='text-6xl font-bold mb-10'>
-          Sensebook <span className='text-[#dae1e1]'></span>
+        <h1 className='text-6xl font-bold mb-4'>
+          Sensebook
         </h1>
+
+        {/* 👇 Caption with fade-in animation */}
+        <p className="text-gray-600 text-center text-base opacity-0 animate-fade-in mt-2 max-w-sm [animation-delay:.5s]">
+          Where emotions meet expression.
+        </p>
          {/*<LinearProgress
           sx={{
             width: 265,
