@@ -102,25 +102,21 @@ export default function Page({ params }: PageProps) {
                     }
                 }, 200);
                 
-                // Remove optimistic comment after delay
+                // Convert optimistic comment to real comment (in-place)
                 setTimeout(() => {
-                    // Remove optimistic comment FIRST to prevent duplicates
-                    setOptimisticComments(prev => prev.filter(c => c.timestamp !== newComment.timestamp));
-                    // Then update from database after a small delay
+                    setOptimisticComments(prev => 
+                        prev.map(c => 
+                            c.timestamp === newComment.timestamp
+                                ? { ...c, isOptimistic: false, optimisticId: undefined }
+                                : c
+                        )
+                    );
+                    
+                    // After a longer delay, silently sync with database
                     setTimeout(() => {
                         handleCommentUpdate();
-                        
-                        // Scroll again after real data loads
-                        setTimeout(() => {
-                            if (commentsContainerRef.current) {
-                                commentsContainerRef.current.scrollTo({
-                                    top: commentsContainerRef.current.scrollHeight,
-                                    behavior: 'smooth'
-                                });
-                            }
-                        }, 100);
-                    }, 100);
-                }, 800);
+                    }, 2000);
+                }, 500);
                 
                 // Clear the storage event
                 localStorage.removeItem(`optimistic-comment-${id}`);
@@ -131,18 +127,8 @@ export default function Page({ params }: PageProps) {
         return () => window.removeEventListener('storage', handleStorageChange);
     }, [id]);
 
-    // Combine real comments with optimistic ones, preventing duplicates
-    const allComments = [
-        ...(post?.comments || []).filter(realComment => 
-            // Exclude real comments that might match optimistic ones by text content
-            !optimisticComments.some(optComment => 
-                optComment.text === realComment.text && 
-                optComment.username === realComment.username &&
-                Math.abs((optComment.timestamp?.toMillis() || 0) - (realComment.timestamp?.toMillis() || 0)) < 5000 // Within 5 seconds
-            )
-        ), 
-        ...optimisticComments
-    ];
+    // Combine real comments with optimistic ones (optimistic comments become real comments in-place)
+    const allComments = [...(post?.comments || []), ...optimisticComments];
 
     // Global click handler for pre-onboarding state
     const handleGlobalClick = (e: MouseEvent) => {
@@ -203,9 +189,9 @@ export default function Page({ params }: PageProps) {
                     <div className="flex-grow max-w-2xl border-x border-gray-100 flex flex-col min-h-screen">
                         <div className="py-4 px-3 text-lg sm:text-xl sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-sm font-bold border-b border-gray-100 flex items-center flex-shrink-0">
                             <Link href="/" onClick={(e) => !onboardingComplete && !user.username && e.preventDefault()}>
-                                <ArrowLeftIcon className="w-5 h-5 mr-2"/>
+                                <ArrowLeftIcon className="w-5 h-5 mr-10"/>
                             </Link>
-                        Thread 
+                            Sense Thread 
                         </div>
 
                         <div className='flex flex-col p-3 space-y-5 border-b border-gray-100 flex-shrink-0'>
@@ -227,7 +213,7 @@ export default function Page({ params }: PageProps) {
                                         </span>
                                     </div>
                                 </div>
-                                
+                                <EllipsisHorizontalIcon className='w-5 h-5'/>
                             </div>
                             <span className='text-{15px]'>{post?.text}</span>    
                         </div>
@@ -240,20 +226,25 @@ export default function Page({ params }: PageProps) {
                         <div className="flex-1 overflow-y-auto" ref={commentsContainerRef}>
                             {allComments.length > 0 ? (
                                 <div className="pb-4">
-                                    <AnimatePresence mode="sync">
+                                    <AnimatePresence mode="wait">
                                         {allComments.map((comment: Comment, index: number) => (
                                             <motion.div
                                                 key={comment.optimisticId || `${comment.username}-${comment.timestamp?.toMillis()}-${index}`}
-                                                initial={comment.isOptimistic ? { opacity: 0, y: 15, scale: 0.98 } : false}
+                                                initial={comment.isOptimistic ? { opacity: 0, y: 20, scale: 0.95 } : false}
                                                 animate={{ 
                                                     opacity: comment.failed ? 0.7 : 1, 
                                                     y: 0, 
                                                     scale: 1 
                                                 }}
-                                                exit={{ opacity: 0, y: -5, scale: 0.98 }}
+                                                exit={{ 
+                                                    opacity: 0, 
+                                                    y: -10, 
+                                                    scale: 0.95,
+                                                    transition: { duration: 0.3, ease: "easeOut" }
+                                                }}
                                                 transition={{ 
-                                                    duration: 0.6, 
-                                                    ease: [0.25, 0.46, 0.45, 0.94],
+                                                    duration: 0.8, 
+                                                    ease: [0.16, 1, 0.3, 1], // Ultra smooth spring-like easing
                                                     delay: comment.isOptimistic ? 0.1 : 0
                                                 }}
                                             >

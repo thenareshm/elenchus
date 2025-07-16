@@ -87,7 +87,7 @@ export default function CommentModal() {
           behavior: 'smooth'
         });
       }
-    }, 300); // Slight delay to let the comment render first
+    }, 300);
 
     // Handle database update in background
     try {
@@ -104,19 +104,31 @@ export default function CommentModal() {
           comments: arrayUnion(realComment)
         });
         
-        // Seamlessly replace optimistic comment with real data (no disappear effect)
+        // Seamlessly convert optimistic comment to real comment (no removal/re-adding)
         setTimeout(() => {
-          // Remove optimistic comment FIRST to prevent duplicates
-          setOptimisticComments(prev => prev.filter(c => c.optimisticId !== commentId));
-          // Then refresh from database after a small delay
+          setOptimisticComments(prev => 
+            prev.map(c => 
+              c.optimisticId === commentId 
+                ? { ...c, isOptimistic: false, optimisticId: undefined } // Convert to real comment
+                : c
+            )
+          );
+          
+          // After a longer delay, silently sync with database without visual changes
           setTimeout(() => {
-            fetchComments();
-          }, 100);
-        }, 400); // Quick transition once database confirms
+            setOptimisticComments(current => {
+              // Only refresh if there are no optimistic comments to avoid conflicts
+              if (!current.some(c => c.isOptimistic)) {
+                fetchComments();
+              }
+              return current;
+            });
+          }, 2000);
+        }, 500);
       }
     } catch (error) {
       console.error("Error saving comment to database:", error);
-      // On error, keep the optimistic comment visible but mark it as failed
+      // On error, mark the optimistic comment as failed
       setOptimisticComments(prev => 
         prev.map(c => 
           c.optimisticId === commentId 
@@ -127,18 +139,8 @@ export default function CommentModal() {
     }
   };
 
-  // Combine real comments with optimistic ones, preventing duplicates
-  const allComments = [
-    ...comments.filter(realComment => 
-      // Exclude real comments that might match optimistic ones by text content
-      !optimisticComments.some(optComment => 
-        optComment.text === realComment.text && 
-        optComment.username === realComment.username &&
-        Math.abs((optComment.timestamp?.toMillis() || 0) - (realComment.timestamp?.toMillis() || 0)) < 5000 // Within 5 seconds
-      )
-    ), 
-    ...optimisticComments
-  ];
+  // Combine real comments with optimistic ones (optimistic comments become real comments in-place)
+  const allComments = [...comments, ...optimisticComments];
 
   const addReply = async (
     parent: Comment | null,
@@ -253,24 +255,25 @@ export default function CommentModal() {
       
       console.log("Reply added successfully to database!");
       
-      // Seamlessly replace optimistic reply with real data
+      // Seamlessly convert optimistic reply to real reply (in-place)
       setTimeout(() => {
-        // Remove specific optimistic reply from the comments structure FIRST
-        const removeOptimisticReply = (list: Comment[]): Comment[] =>
+        const convertOptimisticReply = (list: Comment[]): Comment[] =>
           list.map((c) => ({
             ...c,
-            replies: (c.replies ?? []).filter(r => r.optimisticId !== replyId).map(r => ({
-              ...r,
-              replies: removeOptimisticReply(r.replies ?? [])
-            }))
+            replies: (c.replies ?? []).map(r => 
+              r.optimisticId === replyId 
+                ? { ...r, isOptimistic: false, optimisticId: undefined }
+                : { ...r, replies: convertOptimisticReply(r.replies ?? []) }
+            )
           }));
         
-        setComments(prev => removeOptimisticReply(prev));
-        // Then refresh from database after a small delay to prevent duplicates
+        setComments(prev => convertOptimisticReply(prev));
+        
+        // After a longer delay, silently sync with database
         setTimeout(() => {
           fetchComments();
-        }, 100);
-      }, 400); // Quick transition once database confirms
+        }, 2000);
+      }, 500);
       
     } catch (error) {
       console.error("Error adding reply:", error);
@@ -369,21 +372,26 @@ export default function CommentModal() {
             {loading ? (
               <p className="text-center text-sm text-gray-400">Loading…</p>
             ) : (
-                              <AnimatePresence mode="sync">
+                              <AnimatePresence mode="wait">
                   {allComments.map((c, idx) => (
                     <motion.div
                       key={c.optimisticId || `${c.username}-${c.timestamp?.toMillis()}-${idx}`}
-                      initial={c.isOptimistic ? { opacity: 0, y: 15, scale: 0.98 } : false}
+                      initial={c.isOptimistic ? { opacity: 0, y: 20, scale: 0.95 } : false}
                       animate={{ 
                         opacity: c.failed ? 0.7 : 1, 
                         y: 0, 
                         scale: 1 
                       }}
-                      exit={{ opacity: 0, y: -5, scale: 0.98 }}
+                      exit={{ 
+                        opacity: 0, 
+                        y: -10, 
+                        scale: 0.95,
+                        transition: { duration: 0.3, ease: "easeOut" }
+                      }}
                       transition={{ 
-                        duration: 0.6, 
-                        ease: [0.25, 0.46, 0.45, 0.94], // Smoother easing
-                        delay: c.isOptimistic ? 0.15 : 0
+                        duration: 0.8, 
+                        ease: [0.16, 1, 0.3, 1], // Ultra smooth spring-like easing
+                        delay: c.isOptimistic ? 0.1 : 0
                       }}
                     >
                       <CommentThread
@@ -672,17 +680,22 @@ function CommentThread({
                 }`}
               >
                 <div className={`space-y-4 ${shouldUseHorizontalScroll ? 'min-w-max' : ''}`}>
-                  <AnimatePresence>
+                  <AnimatePresence mode="wait">
                     {comment.replies.map((r, idx) => (
                       <motion.div
-                        key={`${r.username}-${r.timestamp?.toMillis()}-${idx}`}
-                        initial={r.isOptimistic ? { opacity: 0, y: 10, scale: 0.98 } : false}
+                        key={r.optimisticId || `${r.username}-${r.timestamp?.toMillis()}-${idx}`}
+                        initial={r.isOptimistic ? { opacity: 0, y: 15, scale: 0.96 } : false}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                        exit={{ 
+                          opacity: 0, 
+                          y: -8, 
+                          scale: 0.96,
+                          transition: { duration: 0.25, ease: "easeOut" }
+                        }}
                         transition={{ 
-                          duration: 0.4, 
-                          ease: [0.4, 0, 0.2, 1],
-                          delay: r.isOptimistic ? 0.1 : 0
+                          duration: 0.7, 
+                          ease: [0.16, 1, 0.3, 1], // Same ultra smooth easing
+                          delay: r.isOptimistic ? 0.05 : 0
                         }}
                       >
                         <CommentThread

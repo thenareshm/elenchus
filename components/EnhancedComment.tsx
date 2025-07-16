@@ -437,17 +437,22 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
                 }`}
               >
                 <div className={`space-y-4 ${shouldUseHorizontalScroll ? 'min-w-max' : ''}`}>
-                  <AnimatePresence>
+                  <AnimatePresence mode="wait">
                     {comment.replies.map((reply, idx) => (
                       <motion.div
-                        key={`${reply.username}-${reply.timestamp?.toMillis()}-${idx}`}
-                        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                        key={reply.optimisticId || `${reply.username}-${reply.timestamp?.toMillis()}-${idx}`}
+                        initial={{ opacity: 0, y: 15, scale: 0.96 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -5, scale: 0.98 }}
+                        exit={{ 
+                          opacity: 0, 
+                          y: -8, 
+                          scale: 0.96,
+                          transition: { duration: 0.25, ease: "easeOut" }
+                        }}
                         transition={{ 
-                          duration: 0.5, 
-                          ease: [0.25, 0.46, 0.45, 0.94],
-                          delay: idx * 0.05 // Stagger animation for multiple replies
+                          duration: 0.7, 
+                          ease: [0.16, 1, 0.3, 1], // Ultra smooth spring-like easing
+                          delay: idx * 0.03 // Stagger animation for multiple replies
                         }}
                       >
                         <EnhancedComment
