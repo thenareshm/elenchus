@@ -7,12 +7,13 @@ import EnhancedComment from '@/components/EnhancedComment'
 import { ArrowLeftIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { db } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, Timestamp } from 'firebase/firestore'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import WebsiteOnboarding from '@/components/WebsiteOnboarding'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const fetchPost = async (id: string) => {
     const postRef = doc(db, "posts", id)
@@ -30,6 +31,11 @@ interface Comment {
     name: string;
     username: string;
     text: string;
+    timestamp?: Timestamp;
+    replies?: Comment[];
+    isOptimistic?: boolean;
+    optimisticId?: string; // Unique identifier for optimistic comments
+    failed?: boolean; // Mark failed optimistic updates
 }
 
 interface Post {
@@ -43,19 +49,100 @@ interface Post {
 export default function Page({ params }: PageProps) {
     const { id } = params;
     const [post, setPost] = useState<Post | null>(null);
+    const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
     const [showOnboarding, setShowOnboarding] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
     const [onboardingComplete, setOnboardingComplete] = useState(false);
     const user = useSelector((state: RootState) => state.user);
 
+    // Ref for auto-scrolling to latest comment
+    const commentsContainerRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         fetchPost(id).then(data => setPost(data as Post));
     }, [id]);
 
-    const handleCommentUpdate = async () => {
-        const updatedPost = await fetchPost(id);
-        setPost(updatedPost as Post);
+    const handleCommentUpdate = async (shouldScroll = false) => {
+        try {
+            const updatedPost = await fetchPost(id);
+            setPost(updatedPost as Post);
+            // Clear optimistic comments once real data loads
+            setOptimisticComments([]);
+            
+            // Auto-scroll if requested (when user posts a reply)
+            if (shouldScroll) {
+                setTimeout(() => {
+                    if (commentsContainerRef.current) {
+                        commentsContainerRef.current.scrollTo({
+                            top: commentsContainerRef.current.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100);
+            }
+        } catch (error) {
+            console.error("Error updating comments:", error);
+        }
     };
+
+    // Listen for comment modal updates to sync optimistic updates
+    useEffect(() => {
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === `optimistic-comment-${id}` && e.newValue) {
+                const newComment = JSON.parse(e.newValue);
+                setOptimisticComments(prev => [...prev, { ...newComment, isOptimistic: true }]);
+                
+                // Auto-scroll to bottom when new comment is added from modal
+                setTimeout(() => {
+                    if (commentsContainerRef.current) {
+                        commentsContainerRef.current.scrollTo({
+                            top: commentsContainerRef.current.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 200);
+                
+                // Remove optimistic comment after delay
+                setTimeout(() => {
+                    // Remove optimistic comment FIRST to prevent duplicates
+                    setOptimisticComments(prev => prev.filter(c => c.timestamp !== newComment.timestamp));
+                    // Then update from database after a small delay
+                    setTimeout(() => {
+                        handleCommentUpdate();
+                        
+                        // Scroll again after real data loads
+                        setTimeout(() => {
+                            if (commentsContainerRef.current) {
+                                commentsContainerRef.current.scrollTo({
+                                    top: commentsContainerRef.current.scrollHeight,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }, 100);
+                    }, 100);
+                }, 800);
+                
+                // Clear the storage event
+                localStorage.removeItem(`optimistic-comment-${id}`);
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, [id]);
+
+    // Combine real comments with optimistic ones, preventing duplicates
+    const allComments = [
+        ...(post?.comments || []).filter(realComment => 
+            // Exclude real comments that might match optimistic ones by text content
+            !optimisticComments.some(optComment => 
+                optComment.text === realComment.text && 
+                optComment.username === realComment.username &&
+                Math.abs((optComment.timestamp?.toMillis() || 0) - (realComment.timestamp?.toMillis() || 0)) < 5000 // Within 5 seconds
+            )
+        ), 
+        ...optimisticComments
+    ];
 
     // Global click handler for pre-onboarding state
     const handleGlobalClick = (e: MouseEvent) => {
@@ -113,15 +200,15 @@ export default function Page({ params }: PageProps) {
             <PreventDefaultWrapper>
                 <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center">
                     <Sidebar />
-                    <div className="flex-grow max-w-2xl border-x border-gray-100">
-                        <div className="py-4 px-3 text-lg sm:text-xl sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-sm font-bold border-b border-gray-100 flex items-center">
+                    <div className="flex-grow max-w-2xl border-x border-gray-100 flex flex-col min-h-screen">
+                        <div className="py-4 px-3 text-lg sm:text-xl sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-sm font-bold border-b border-gray-100 flex items-center flex-shrink-0">
                             <Link href="/" onClick={(e) => !onboardingComplete && !user.username && e.preventDefault()}>
                                 <ArrowLeftIcon className="w-5 h-5 mr-10"/>
                             </Link>
                             Sense Thread 
                         </div>
 
-                        <div className='flex flex-col p-3 space-y-5 border-b border-gray-100'>
+                        <div className='flex flex-col p-3 space-y-5 border-b border-gray-100 flex-shrink-0'>
                             <div className='flex justify-normal items-center mb-1.5'>
                                 <div className='flex space-x-3'>
                                     <Image
@@ -145,18 +232,47 @@ export default function Page({ params }: PageProps) {
                             <span className='text-{15px]'>{post?.text}</span>    
                         </div>
 
-                        <div className="border-b border-gray-100 p-3 text-[15px]">
-                            <span className="font-bold">{post?.likes?.length}</span> Replies
+                        <div className="border-b border-gray-100 p-3 text-[15px] flex-shrink-0">
+                            <span className="font-bold">{post?.likes?.length}</span> Likes
                         </div>
                     
-                        {post?.comments?.map((comment: Comment, index: number) => (
-                            <EnhancedComment 
-                                key={index}
-                                comment={comment}
-                                postId={id}
-                                onCommentUpdate={handleCommentUpdate}
-                            />
-                        ))}
+                        {/* Comments Section with Scrolling */}
+                        <div className="flex-1 overflow-y-auto" ref={commentsContainerRef}>
+                            {allComments.length > 0 ? (
+                                <div className="pb-4">
+                                    <AnimatePresence mode="sync">
+                                        {allComments.map((comment: Comment, index: number) => (
+                                            <motion.div
+                                                key={comment.optimisticId || `${comment.username}-${comment.timestamp?.toMillis()}-${index}`}
+                                                initial={comment.isOptimistic ? { opacity: 0, y: 15, scale: 0.98 } : false}
+                                                animate={{ 
+                                                    opacity: comment.failed ? 0.7 : 1, 
+                                                    y: 0, 
+                                                    scale: 1 
+                                                }}
+                                                exit={{ opacity: 0, y: -5, scale: 0.98 }}
+                                                transition={{ 
+                                                    duration: 0.6, 
+                                                    ease: [0.25, 0.46, 0.45, 0.94],
+                                                    delay: comment.isOptimistic ? 0.1 : 0
+                                                }}
+                                            >
+                                                <EnhancedComment 
+                                                    comment={comment}
+                                                    postId={id}
+                                                    onCommentUpdate={handleCommentUpdate}
+                                                    depth={0}
+                                                />
+                                            </motion.div>
+                                        ))}
+                                    </AnimatePresence>
+                                </div>
+                            ) : (
+                                <div className="p-6 text-center text-gray-500">
+                                    <p>No comments yet. Be the first to comment!</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <Widgets />
                 </div>
