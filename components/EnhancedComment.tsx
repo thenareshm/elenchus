@@ -130,8 +130,15 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
   const handleSaveEdit = async () => {
     if (!editText.trim()) return;
 
+    const originalText = comment.text;
     setIsLoading(true);
+    
     try {
+      // Optimistic update - show changes immediately
+      const optimisticComment = { ...comment, text: editText.trim() };
+      // We'll rely on the parent component to handle the optimistic state
+      // For now, just show loading state
+      
       const postRef = doc(db, "posts", postId);
       const snap = await getDoc(postRef);
       const data = snap.data();
@@ -144,6 +151,8 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
       onCommentUpdate?.();
     } catch (error) {
       console.error("Error updating comment:", error);
+      // Revert on error
+      setEditText(originalText);
     } finally {
       setIsLoading(false);
     }
@@ -156,7 +165,11 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
 
   const handleDelete = async () => {
     setIsLoading(true);
+    
     try {
+      // Optimistic update - hide comment immediately for better UX
+      // The parent will handle the actual state management
+      
       const postRef = doc(db, "posts", postId);
       const snap = await getDoc(postRef);
       const data = snap.data();
@@ -169,6 +182,7 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
       onCommentUpdate?.();
     } catch (error) {
       console.error("Error deleting comment:", error);
+      // Could show error state here
     } finally {
       setIsLoading(false);
     }
@@ -183,36 +197,44 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
     setIsLoading(true);
     console.log("Starting to add reply to comment:", { comment: comment.text, replyText });
     
+    const newReply: Comment = {
+      name: user.name,
+      username: user.username,
+      text: replyText.trim(),
+      timestamp: Timestamp.now(),
+      replies: [],
+    };
+
+    // Create unique identifier for optimistic update
+    const replyId = crypto.randomUUID ? crypto.randomUUID() : `${user.username}-${Date.now()}-${Math.random()}`;
+    const optimisticReply = { ...newReply, isOptimistic: true, optimisticId: replyId };
+
     try {
-      const postRef = doc(db, "posts", postId);
+      // Show immediate feedback to user
+      setReplyText('');
+      setShowReplyInput(false);
+      setShowReplies(true);
+      setUserPostedReply(true);
       
-      // Fetch fresh data from database
+      // The optimistic update will be handled by the parent component's refresh
+      // For thread page, trigger immediate update with optimistic data
+      onCommentUpdate?.(true);
+      
+      // Handle database update in background
+      const postRef = doc(db, "posts", postId);
       const snap = await getDoc(postRef);
       const data = snap.data();
       const currentComments = (data?.comments as Comment[]) ?? [];
       
-      console.log("Current comments from DB:", currentComments.length);
-      
-      const newReply: Comment = {
-        name: user.name,
-        username: user.username,
-        text: replyText.trim(),
-        timestamp: Timestamp.now(),
-        replies: [],
-      };
-
       // Find and update the specific comment
       const updateCommentInList = (list: Comment[]): Comment[] =>
         list.map((c) => {
-          // Compare by content since we don't have unique IDs
           if (c.name === comment.name && 
               c.username === comment.username && 
               c.text === comment.text &&
               c.timestamp?.toMillis() === comment.timestamp?.toMillis()) {
-            console.log("Found matching comment, adding reply");
             return { ...c, replies: [...(c.replies ?? []), newReply] };
           }
-          // Recursively check replies
           if (c.replies && c.replies.length > 0) {
             return { ...c, replies: updateCommentInList(c.replies) };
           }
@@ -221,27 +243,19 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
       
       const updatedComments = updateCommentInList(currentComments);
       
-      console.log("Updated comments:", updatedComments.length);
-      
       // Update database
       await updateDoc(postRef, { comments: updatedComments });
       
       console.log("Reply added successfully in thread page!");
       
-      // Reset form and show replies with smooth transition
-      setReplyText('');
-      setShowReplyInput(false);
-      setShowReplies(true);
-      setUserPostedReply(true); // Mark that user posted a reply to keep it expanded
-      
-      console.log("Set showReplies to true, calling onCommentUpdate");
-      
-      // Force refresh the comments to show the new reply immediately with auto-scroll
+      // Refresh with real data
       setTimeout(() => {
-        onCommentUpdate?.(true); // Pass true to trigger auto-scroll
-      }, 100); // Small delay to ensure UI updates
+        onCommentUpdate?.(true);
+      }, 100);
+      
     } catch (error) {
       console.error("Error adding reply:", error);
+      // On error, could show error state or revert optimistic update
     } finally {
       setIsLoading(false);
     }
@@ -286,7 +300,7 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
 
                 {/* Horizontal dropdown menu with two squares */}
                 {showDropdown && (
-                  <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-md shadow-lg z-50 flex">
+                  <div className="absolute right-8 top-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 flex">
                     <button
                       onClick={handleEdit}
                       disabled={isLoading}
@@ -437,22 +451,17 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
                 }`}
               >
                 <div className={`space-y-4 ${shouldUseHorizontalScroll ? 'min-w-max' : ''}`}>
-                  <AnimatePresence mode="wait">
+                  <AnimatePresence>
                     {comment.replies.map((reply, idx) => (
                       <motion.div
-                        key={reply.optimisticId || `${reply.username}-${reply.timestamp?.toMillis()}-${idx}`}
-                        initial={{ opacity: 0, y: 15, scale: 0.96 }}
+                        key={`${reply.username}-${reply.timestamp?.toMillis()}-${idx}`}
+                        initial={{ opacity: 0, y: 10, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ 
-                          opacity: 0, 
-                          y: -8, 
-                          scale: 0.96,
-                          transition: { duration: 0.25, ease: "easeOut" }
-                        }}
+                        exit={{ opacity: 0, y: -5, scale: 0.98 }}
                         transition={{ 
-                          duration: 0.7, 
-                          ease: [0.16, 1, 0.3, 1], // Ultra smooth spring-like easing
-                          delay: idx * 0.03 // Stagger animation for multiple replies
+                          duration: 0.5, 
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                          delay: idx * 0.05 // Stagger animation for multiple replies
                         }}
                       >
                         <EnhancedComment

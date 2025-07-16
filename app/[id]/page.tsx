@@ -69,7 +69,7 @@ export default function Page({ params }: PageProps) {
             // Clear optimistic comments once real data loads
             setOptimisticComments([]);
             
-            // Auto-scroll if requested (when user posts a reply)
+            // Auto-scroll if requested
             if (shouldScroll) {
                 setTimeout(() => {
                     if (commentsContainerRef.current) {
@@ -90,9 +90,17 @@ export default function Page({ params }: PageProps) {
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === `optimistic-comment-${id}` && e.newValue) {
                 const newComment = JSON.parse(e.newValue);
-                setOptimisticComments(prev => [...prev, { ...newComment, isOptimistic: true }]);
                 
-                // Auto-scroll to bottom when new comment is added from modal
+                // Add optimistic comment with unique ID
+                const optimisticComment = { 
+                    ...newComment, 
+                    isOptimistic: true,
+                    optimisticId: newComment.optimisticId || `fallback-${Date.now()}`
+                };
+                
+                setOptimisticComments(prev => [...prev, optimisticComment]);
+                
+                // Auto-scroll smoothly
                 setTimeout(() => {
                     if (commentsContainerRef.current) {
                         commentsContainerRef.current.scrollTo({
@@ -100,26 +108,31 @@ export default function Page({ params }: PageProps) {
                             behavior: 'smooth'
                         });
                     }
-                }, 200);
+                }, 100);
                 
-                // Convert optimistic comment to real comment (in-place)
-                setTimeout(() => {
+                // Set up cleanup: remove optimistic comment when real data arrives
+                // The modal will handle removing the optimistic comment and fetching real data
+                const cleanup = () => {
                     setOptimisticComments(prev => 
-                        prev.map(c => 
-                            c.timestamp === newComment.timestamp
-                                ? { ...c, isOptimistic: false, optimisticId: undefined }
-                                : c
-                        )
+                        prev.filter(c => c.optimisticId !== optimisticComment.optimisticId)
                     );
-                    
-                    // After a longer delay, silently sync with database
-                    setTimeout(() => {
-                        handleCommentUpdate();
-                    }, 2000);
-                }, 500);
+                    handleCommentUpdate(true); // Refresh and scroll
+                };
                 
-                // Clear the storage event
-                localStorage.removeItem(`optimistic-comment-${id}`);
+                // Listen for cleanup signal or timeout
+                const cleanupTimeout = setTimeout(cleanup, 2000); // Fallback cleanup
+                
+                const cleanupListener = () => {
+                    const storageValue = localStorage.getItem(`optimistic-comment-${id}`);
+                    if (!storageValue) {
+                        clearTimeout(cleanupTimeout);
+                        cleanup();
+                        window.removeEventListener('storage', cleanupListener);
+                    }
+                };
+                
+                // Listen for storage removal as cleanup signal
+                window.addEventListener('storage', cleanupListener);
             }
         };
 
@@ -127,8 +140,17 @@ export default function Page({ params }: PageProps) {
         return () => window.removeEventListener('storage', handleStorageChange);
     }, [id]);
 
-    // Combine real comments with optimistic ones (optimistic comments become real comments in-place)
-    const allComments = [...(post?.comments || []), ...optimisticComments];
+    // Combine real comments with optimistic ones, using unique IDs to prevent duplicates
+    const allComments = [
+        ...(post?.comments || []).filter(realComment => 
+            // Only exclude real comments if there's an optimistic comment with matching content
+            !optimisticComments.some(optComment => 
+                optComment.text === realComment.text && 
+                optComment.username === realComment.username
+            )
+        ), 
+        ...optimisticComments
+    ];
 
     // Global click handler for pre-onboarding state
     const handleGlobalClick = (e: MouseEvent) => {
@@ -189,9 +211,9 @@ export default function Page({ params }: PageProps) {
                     <div className="flex-grow max-w-2xl border-x border-gray-100 flex flex-col min-h-screen">
                         <div className="py-4 px-3 text-lg sm:text-xl sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-sm font-bold border-b border-gray-100 flex items-center flex-shrink-0">
                             <Link href="/" onClick={(e) => !onboardingComplete && !user.username && e.preventDefault()}>
-                                <ArrowLeftIcon className="w-5 h-5 mr-10"/>
+                                <ArrowLeftIcon className="w-5 h-5 mr-2"/>
                             </Link>
-                            Sense Thread 
+                        Thread 
                         </div>
 
                         <div className='flex flex-col p-3 space-y-5 border-b border-gray-100 flex-shrink-0'>
@@ -213,7 +235,7 @@ export default function Page({ params }: PageProps) {
                                         </span>
                                     </div>
                                 </div>
-                                <EllipsisHorizontalIcon className='w-5 h-5'/>
+                                
                             </div>
                             <span className='text-{15px]'>{post?.text}</span>    
                         </div>
@@ -226,25 +248,20 @@ export default function Page({ params }: PageProps) {
                         <div className="flex-1 overflow-y-auto" ref={commentsContainerRef}>
                             {allComments.length > 0 ? (
                                 <div className="pb-4">
-                                    <AnimatePresence mode="wait">
+                                    <AnimatePresence mode="sync">
                                         {allComments.map((comment: Comment, index: number) => (
                                             <motion.div
                                                 key={comment.optimisticId || `${comment.username}-${comment.timestamp?.toMillis()}-${index}`}
-                                                initial={comment.isOptimistic ? { opacity: 0, y: 20, scale: 0.95 } : false}
+                                                initial={comment.isOptimistic ? { opacity: 0, y: 15, scale: 0.98 } : false}
                                                 animate={{ 
                                                     opacity: comment.failed ? 0.7 : 1, 
                                                     y: 0, 
                                                     scale: 1 
                                                 }}
-                                                exit={{ 
-                                                    opacity: 0, 
-                                                    y: -10, 
-                                                    scale: 0.95,
-                                                    transition: { duration: 0.3, ease: "easeOut" }
-                                                }}
+                                                exit={{ opacity: 0, y: -5, scale: 0.98 }}
                                                 transition={{ 
-                                                    duration: 0.8, 
-                                                    ease: [0.16, 1, 0.3, 1], // Ultra smooth spring-like easing
+                                                    duration: 0.6, 
+                                                    ease: [0.25, 0.46, 0.45, 0.94],
                                                     delay: comment.isOptimistic ? 0.1 : 0
                                                 }}
                                             >
