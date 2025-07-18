@@ -1,5 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { openWebsiteModal, setWebsiteUrl } from '@/redux/slices/modalSlice';
 import TiltedCard from './TiltedCard';
 
 interface TechArticle {
@@ -12,6 +14,7 @@ interface TechArticle {
 export default function TechnologyNews() {
   const [techNews, setTechNews] = useState<TechArticle[]>([]);
   const [error, setError] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchTechNews = async () => {
@@ -37,6 +40,12 @@ export default function TechnologyNews() {
     return match ? `#${match[1]}` : `#${str.split(' ')[0]}`;
   }
 
+  const handleArticleClick = (url: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    dispatch(setWebsiteUrl(url));
+    dispatch(openWebsiteModal());
+  };
+
   if (error) return null;
   if (techNews.length === 0) return null;
 
@@ -56,12 +65,9 @@ export default function TechnologyNews() {
               showMobileWarning={false}
               showTooltip={false}
             >
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-xl p-3 hover:bg-gray-200 transition"
-                style={{ textDecoration: 'none' }}
+              <div
+                className="block rounded-xl p-3 hover:bg-gray-200 transition cursor-pointer"
+                onClick={(e) => handleArticleClick(item.url, e)}
               >
                 <div className="font-bold text-[15px] text-gray-900 leading-tight">
                   {toHashtag(item.title)}
@@ -73,7 +79,7 @@ export default function TechnologyNews() {
                   <div className="text-xs text-gray-600 mt-1 leading-tight">{item.description}</div>
                 )}
                 <div className="text-xs text-gray-500 mt-1">{item.source?.name}</div>
-              </a>
+              </div>
             </TiltedCard>
           </li>
         ))}

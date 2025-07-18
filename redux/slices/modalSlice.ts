@@ -11,7 +11,9 @@ const initialState = {
         username: "",
         id: "",
         text: "",
-    }
+    },
+    websiteModalOpen: false,
+    websiteUrl: ""
 
 }
 
@@ -43,6 +45,16 @@ const modalSlice = createSlice({
         state.commentPostDetails.id = action.payload.id;
         state.commentPostDetails.text = action.payload.text;
     },
+    openWebsiteModal: (state) => {
+        state.websiteModalOpen = true;
+    },
+    closeWebsiteModal: (state) => {
+        state.websiteModalOpen = false;
+        state.websiteUrl = "";
+    },
+    setWebsiteUrl: (state, action) => {
+        state.websiteUrl = action.payload;
+    },
   }
 });
 
@@ -53,7 +65,10 @@ export const {
     closeLogInModal, 
     openCommentModal, 
     closeCommentModal,
-    setCommentDetails
+    setCommentDetails,
+    openWebsiteModal,
+    closeWebsiteModal,
+    setWebsiteUrl
 } = modalSlice.actions
 
 export default modalSlice.reducer
