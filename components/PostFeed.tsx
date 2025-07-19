@@ -31,7 +31,7 @@ export default function PostFeed() {
 
 
   return (
-    <div className="flex-grow max-w-2xl border-x border-gray-100
+    <div className="flex-grow max-w-2xl px-2 lg:px-0
     ">
       <div 
         className="py-4 px-3 text-lg sm:text-xl sticky top-0 

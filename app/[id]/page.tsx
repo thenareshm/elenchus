@@ -206,9 +206,9 @@ export default function Page({ params }: PageProps) {
     return (
         <>
             <PreventDefaultWrapper>
-                <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center">
+                <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center gap-4 lg:gap-6 bg-white">
                     <Sidebar />
-                    <div className="flex-grow max-w-2xl border-x border-gray-100 flex flex-col min-h-screen">
+                    <div className="flex-grow max-w-2xl px-2 lg:px-0 flex flex-col min-h-screen">
                         <div className="py-4 px-3 text-lg sm:text-xl sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-sm font-bold border-b border-gray-100 flex items-center flex-shrink-0">
                             <Link href="/" onClick={(e) => !onboardingComplete && !user.username && e.preventDefault()}>
                                 <ArrowLeftIcon className="w-5 h-5 mr-2"/>
@@ -216,7 +216,7 @@ export default function Page({ params }: PageProps) {
                         Thread 
                         </div>
 
-                        <div className='flex flex-col p-3 space-y-5 border-b border-gray-100 flex-shrink-0'>
+                        <div className='bg-gray-100 rounded-xl p-4 shadow-md ring-1 ring-gray-300/40 transition-shadow hover:shadow-lg mb-3 flex-shrink-0'>
                             <div className='flex justify-normal items-center mb-1.5'>
                                 <div className='flex space-x-3'>
                                     <Image
@@ -240,7 +240,7 @@ export default function Page({ params }: PageProps) {
                             <span className='text-{15px]'>{post?.text}</span>    
                         </div>
 
-                        <div className="border-b border-gray-100 p-3 text-[15px] flex-shrink-0">
+                        <div className="bg-gray-100 rounded-xl p-4 shadow-md ring-1 ring-gray-300/40 text-[15px] flex-shrink-0 mb-3">
                             <span className="font-bold">{post?.likes?.length}</span> Likes
                         </div>
                     

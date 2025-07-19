@@ -221,8 +221,8 @@ export default function EnhancedComment({ comment, postId, onCommentUpdate, dept
   const containerPadding = shouldUseHorizontalScroll ? "pl-4" : `ml-6 pl-4`;
 
   return (
-    <div className={`border-b border-gray-100 ${depth > 0 ? 'pb-4' : ''}`}>
-      <div className="flex items-start gap-3 p-3">
+    <div className="bg-gray-100 rounded-xl p-4 shadow-md ring-1 ring-gray-300/40 transition-shadow hover:shadow-lg mb-3">
+      <div className="flex items-start gap-3">
         {/* Fixed profile picture */}
         <div className="flex-shrink-0">
           <Image

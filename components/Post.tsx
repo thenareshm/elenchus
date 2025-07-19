@@ -117,7 +117,7 @@ export default function Post({data, id }: PostProps) {
 }
 
   return (
-    <div className="border-b border-gray-100">
+    <article className="bg-gray-100 text-black rounded-xl p-4 shadow-md ring-1 ring-gray-300/40 transition-shadow hover:shadow-lg mb-3">
       <div className={isEditing ? "cursor-default" : ""}>
         {isEditing ? (
           <PostHeader 
@@ -242,7 +242,7 @@ export default function Post({data, id }: PostProps) {
           </div>
         </div>
       )}
-    </div>
+    </article>
   );
 }
 

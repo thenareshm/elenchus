@@ -124,7 +124,7 @@ export default function Home() {
         <link rel="shortcut icon" href="/sblogotb.ico" type="image/x-icon" />
       </Head>
       <PreventDefaultWrapper>
-        <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center pb-32">
+        <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center gap-4 lg:gap-6 bg-white pb-32">
           <Sidebar />
           <PostFeed />
           <Widgets />
@@ -136,7 +136,7 @@ export default function Home() {
       <LoadingScreen />
       <Footer />
 
-      {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />}
+       { /* {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />} */}
     </>
   );
 }
