@@ -136,7 +136,7 @@ export default function Home() {
       <LoadingScreen />
       <Footer />
 
-       { /* {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />} */}
+       {showOnboarding && <WebsiteOnboarding onComplete={handleOnboardingComplete} />}
     </>
   );
 }
