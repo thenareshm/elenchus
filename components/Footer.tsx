@@ -120,7 +120,7 @@ const Footer = () => {
           </div>
           
           <div className="text-center sm:text-right">
-            <p>© 2025 Sensebook. All Rights Reserved.</p>
+            <p>© 2025 PYNX. All Rights Reserved.</p>
             <p>
               Designed and Developed by{' '}
               <Link 

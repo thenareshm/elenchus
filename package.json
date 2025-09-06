@@ -1,12 +1,13 @@
 {
-  "name": "sensebook",
+  "name": "pynx",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "brand:check": "bash scripts/check-brand-leftovers.sh"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

@@ -7,7 +7,7 @@ import ThanosSnap from './utils/ThanosSnap';
 const onboardingCards = [
   {
     title: '🌎 Make Sense of the World',
-    body: `You've just entered a space where thoughts aren't shouted—they're shared with purpose.\nAt Sensebook, we believe in calm, clear, compassionate conversation.`,
+    body: `You've just entered a space where thoughts aren't shouted—they're shared with purpose.\nAt PYNX, we believe in calm, clear, compassionate conversation.`,
     cta: 'Next →',
   },    
   {

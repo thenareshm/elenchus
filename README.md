@@ -1,6 +1,6 @@
-# Sensebook 🧠❤️
+# PYNX 🧠❤️
 
-Sensebook is a next-gen social discussion platform that helps people make sense of what's happening in the world—using both heart and brain.
+PYNX is a next-gen social discussion platform that helps people make sense of what's happening in the world—using both heart and brain.
 
 ## 🚀 Features
 - 🔥 Trending tech and world news feeds

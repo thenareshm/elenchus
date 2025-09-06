@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/redux/StoreProvider";
+import { APP } from "@/src/lib/appConfig";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sensebook",
-  description: "Sensebook - A sensible social dicussion app on what's happening and how it make sense into the future world.",
+  title: APP.name,
+  description: `${APP.name} - A sensible social discussion app on what's happening and how it makes sense into the future world.`,
   icons: {
     icon: [
       { url: '/sblogotb.png', type: 'image/png' },
