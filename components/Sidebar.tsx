@@ -12,7 +12,7 @@ export default function Sidebar() {
   const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
-  const handleSensebookClick = (e: React.MouseEvent) => {
+  const handlePynxClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent default button behavior
     if (!user.username) {
       dispatch(openSignUpModal());
@@ -22,7 +22,7 @@ export default function Sidebar() {
   return (
     <nav className="hidden sm:flex flex-col p-3 xl:ml-20 xl:mr-10 w-[280px]" data-testid="sidebar">
       <div className="relative flex flex-col items-start">
-        {/* Header Row: Logo + Sensebook Button */}
+        {/* Header Row: Logo + PYNX Button */}
         <div className="flex items-center space-x-3 py-3 w-full">
           <Link href="/" onClick={(e) => !user.username && e.preventDefault()}>
             <Image
@@ -34,9 +34,9 @@ export default function Sidebar() {
           </Link>
           <button
             className="bg-[#C0BAB5] w-[120px] h-[40px] rounded-full text-white font-medium shadow-md text-base"
-            onClick={handleSensebookClick}
+            onClick={handlePynxClick}
           >
-            Sensebook
+            PYNX
           </button>
         </div>
 

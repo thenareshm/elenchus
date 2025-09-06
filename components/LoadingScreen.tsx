@@ -21,11 +21,11 @@ export default function LoadingScreen() {
           src={'/assets/sblogotb.png'}
           width={120}
           height={120}
-          alt="sense book Logo"
+          alt="PYNX Logo"
           className='mb-5'
         />
         <h1 className='text-6xl font-bold mb-10'>
-          Sensebook <span className='text-[#dae1e1]'></span>
+          PYNX <span className='text-[#dae1e1]'></span>
         </h1>
          {/*<LinearProgress
           sx={{

@@ -144,7 +144,7 @@ export default function LogInModal() {
             data-modal-close="true"
           />
           <div className="pt-10 pb-20 px-4 sm:px-20">
-            <h1 className="text-3xl font-bold mb-10">Log in to Sensebook </h1>
+            <h1 className="text-3xl font-bold mb-10">Log in to PYNX </h1>
             <div className="w-full space-y-5 mb-10">
               <input
                 className="w-full h-[54px] border border-gray-200 outline-none ps-3 rounded-[4px] focus:border-[#C0BAB5] transition"
