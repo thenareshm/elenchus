@@ -1,4 +1,4 @@
-// app/api/gnews-tech/route.ts
+// app/api/gnews-sports/route.ts
 import { NextResponse } from 'next/server';
 
 let cache: unknown[] | null = null;
@@ -11,11 +11,11 @@ export async function GET() {
   try {
     if (!cache || now - lastFetch > CACHE_DURATION) {
       const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
-      // topic=technology for tech news
-      const url = `https://gnews.io/api/v4/top-headlines?token=${GNEWS_API_KEY}&topic=technology&lang=en&max=5`;
+      // topic=sports for sports news
+      const url = `https://gnews.io/api/v4/top-headlines?token=${GNEWS_API_KEY}&topic=sports&lang=en&max=5`;
       const res = await fetch(url);
       const data = await res.json();
-      console.log("[GNews Tech API DEBUG]", JSON.stringify(data, null, 2));
+      console.log("[GNews Sports API DEBUG]", JSON.stringify(data, null, 2));
       if (Array.isArray(data.articles)) {
         cache = data.articles;
       } else {
@@ -25,7 +25,7 @@ export async function GET() {
     }
     return NextResponse.json(cache);
   } catch (e) {
-    console.error("GNews Tech route error:", e);
+    console.error("GNews Sports route error:", e);
     return NextResponse.json([], { status: 500 });
   }
 }

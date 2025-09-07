@@ -1,6 +1,8 @@
-# PYNX 🧠❤️
+# PNYXA 🧠❤️
 
-PYNX is a next-gen social discussion platform that helps people make sense of what's happening in the world—using both heart and brain.
+PNYXA is a next-gen social discussion platform that helps people make sense of what's happening in the world—using both heart and brain.
+
+**Think it. Say it. pə-NIK-suh.**
 
 ## 🚀 Features
 - 🔥 Trending tech and world news feeds

@@ -10,7 +10,7 @@ export async function GET() {
   try {
     if (!cache || now - lastFetch > CACHE_DURATION) {
       const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
-      const url = `https://gnews.io/api/v4/top-headlines?token=${GNEWS_API_KEY}&topic=world&lang=en&max=8`;
+      const url = `https://gnews.io/api/v4/top-headlines?token=${GNEWS_API_KEY}&topic=world&lang=en&max=5`;
       const res = await fetch(url);
       const data = await res.json();
 

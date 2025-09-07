@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import LoadingScreen from '@/components/LoadingScreen';
 import CommentModal from '@/components/modals/CommentModal';
+import WebsiteModal from '@/components/modals/WebsiteModal';
 import PostFeed from '@/components/PostFeed';
 import Sidebar from '@/components/Sidebar';
 import SignUpPrompt from '@/components/SignUpPrompt';
@@ -31,7 +32,7 @@ export default function Home() {
   };
 
   // Global click handler for pre-onboarding state
-  const handleGlobalClick = (e: MouseEvent) => {
+  const handleGlobalClick = useCallback((e: MouseEvent) => {
     if (!user.username && !hasInteracted) {
       const target = e.target as HTMLElement;
       const isLoadingScreen = target.closest('#loading-screen');
@@ -44,7 +45,7 @@ export default function Home() {
         setHasInteracted(true);
       }
     }
-  };
+  }, [user.username, hasInteracted, setShowOnboarding, setHasInteracted]);
 
   // Add global click listener
   useEffect(() => {
@@ -53,7 +54,7 @@ export default function Home() {
       window.addEventListener('click', handleGlobalClick, true);
       return () => window.removeEventListener('click', handleGlobalClick, true);
     }
-  }, [user.username, hasInteracted, showOnboarding]);
+  }, [user.username, hasInteracted, showOnboarding, handleGlobalClick]);
 
   // Handle post-onboarding clicks
   useEffect(() => {
@@ -123,13 +124,14 @@ export default function Home() {
         <link rel="shortcut icon" href="/sblogotb.ico" type="image/x-icon" />
       </Head>
       <PreventDefaultWrapper>
-        <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center pb-32">
+        <div className="text-[#0F1419] min-h-screen max-w-[1400px] mx-auto flex justify-center gap-4 lg:gap-6 bg-white pb-32">
           <Sidebar />
           <PostFeed />
           <Widgets />
         </div>
       </PreventDefaultWrapper>
       <CommentModal />
+      <WebsiteModal />
       <SignUpPrompt />
       <LoadingScreen />
       <Footer />

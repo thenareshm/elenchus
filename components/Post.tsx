@@ -10,6 +10,7 @@ import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
 import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
+import { HeartIcon } from "@heroicons/react/24/solid";
 
 import HeartbrainIcon from '@/components/icons/HeartbrainIcon';
 
@@ -116,7 +117,7 @@ export default function Post({data, id }: PostProps) {
 }
 
   return (
-    <div className="border-b border-gray-100">
+    <article className="bg-gray-100 text-black rounded-xl p-4 shadow-md ring-1 ring-gray-300/40 transition-shadow hover:shadow-lg mb-3">
       <div className={isEditing ? "cursor-default" : ""}>
         {isEditing ? (
           <PostHeader 
@@ -192,9 +193,9 @@ export default function Post({data, id }: PostProps) {
         <div className="relative">
           { 
             data.likes.includes(user.uid) ?
-            <HeartbrainIcon
+            <HeartIcon
             className="w-[24px] h-[24px] cursor-pointer
-            text-red-500 transition
+            text-gray-400 transition
             "
             onClick={() => likePost()}
             />:
@@ -241,7 +242,7 @@ export default function Post({data, id }: PostProps) {
           </div>
         </div>
       )}
-    </div>
+    </article>
   );
 }
 
@@ -374,6 +375,7 @@ export function PostHeader({
               className="w-full p-3 border border-gray-300 rounded-md resize-none min-h-[80px] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
               placeholder="What's happening?"
               disabled={isLoading}
+              maxLength={1000}
             />
             <div className="flex justify-end space-x-2">
               <button

@@ -7,6 +7,7 @@ import { RootState } from "@/redux/store";
 import { openSignUpModal } from "@/redux/slices/modalSlice";
 import SidebarUserInfo from "./SidebarUserInfo";
 import TrendingNews from "./TrendingNews";
+import SportsNews from "./SportsNews";
 
 export default function Sidebar() {
   const user = useSelector((state: RootState) => state.user);
@@ -47,6 +48,9 @@ export default function Sidebar() {
 
         {/* Trending News Widget below user info */}
         <TrendingNews />
+        
+        {/* Sports News Widget below trending news */}
+        <SportsNews />
       </div>
     </nav>
   );

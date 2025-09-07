@@ -11,16 +11,17 @@ interface Article {
   source: { name: string };
 }
 
+// === Set your card width here! (e.g., '340px', '380px', '100%' etc) ===
 const cardWidth = '450px';
 
-export default function TrendingNews() {
+export default function SportsNews() {
   const [news, setNews] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch('/api/gnews')
+    fetch('/api/gnews-sports')
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) setNews(data);
@@ -28,7 +29,7 @@ export default function TrendingNews() {
         setLoading(false);
       })
       .catch(() => {
-        setError('Failed to fetch news.');
+        setError('Failed to fetch sports news.');
         setNews([]);
         setLoading(false);
       });
@@ -36,6 +37,7 @@ export default function TrendingNews() {
 
   function toHashtag(str: string) {
     if (!str) return '';
+    // Take first word or first capitalized word for hashtag
     const match = str.match(/\b([A-Z][a-zA-Z0-9]*)\b/);
     return match ? `#${match[1]}` : `#${str.split(' ')[0]}`;
   }
@@ -51,13 +53,13 @@ export default function TrendingNews() {
       className="bg-gray-100 rounded-2xl shadow p-4 mt-4"
       style={{ width: cardWidth, maxWidth: '100%' }}
     >
-      <h2 className="font-bold text-xl mb-4 text-gray-900">What&apos;s Happening</h2>
+      <h2 className="font-bold text-xl mb-4 text-gray-900">Sports</h2>
       {loading ? (
         <div className="text-sm text-gray-400">Loading...</div>
       ) : error ? (
         <div className="text-sm text-red-500">{error}</div>
       ) : news.length === 0 ? (
-        <div className="text-sm text-gray-400">No news found.</div>
+        <div className="text-sm text-gray-400">No sports news found.</div>
       ) : (
         <ul className="space-y-3">
           {news.map((article, idx) => (
