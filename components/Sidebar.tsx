@@ -37,7 +37,7 @@ export default function Sidebar() {
             className="bg-[#C0BAB5] w-[120px] h-[40px] rounded-full text-white font-medium shadow-md text-base"
             onClick={handlePynxClick}
           >
-            PNYXA
+            Pnyxa
           </button>
         </div>
 
