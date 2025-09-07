@@ -21,11 +21,11 @@ export default function LoadingScreen() {
           src={'/assets/sblogotb.png'}
           width={120}
           height={120}
-          alt="Pnyxa Logo"
+          alt="Elenchus Logo"
           className='mb-5'
         />
         <h1 className='text-6xl font-bold mb-4'>
-          Pnyxa
+          Elenchus
         </h1>
 
         {/* 👇 Caption with fade-in animation */}

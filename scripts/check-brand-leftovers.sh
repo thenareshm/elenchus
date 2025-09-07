@@ -69,9 +69,9 @@ if [ "$TOTAL_COUNT" -gt 0 ]; then
     echo "$SENSEBOOK_LOWER_MATCHES"
     echo ""
   fi
-  echo -e "${RED}Please update these references to use PNYXA/pnyxa or the centralized APP config.${NC}"
+  echo -e "${RED}Please update these references to use Elenchus/elenchus or the centralized APP config.${NC}"
   exit 1
 else
-  echo -e "${GREEN}✅ No brand leftovers found! All references have been updated to PNYXA/pnyxa.${NC}"
+  echo -e "${GREEN}✅ No brand leftovers found! All references have been updated to Elenchus/elenchus.${NC}"
   exit 0
 fi

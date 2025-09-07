@@ -1,7 +1,7 @@
 {
-  "name": "PNYXA",
-  "short_name": "PNYXA",
-  "description": "PNYXA - Think it. Say it. pə-NIK-suh. A sensible social discussion app on what's happening and how it makes sense into the future world.",
+  "name": "Elenchus",
+  "short_name": "Elenchus",
+  "description": "Elenchus - Think it. Say it. pə-NIK-suh. A sensible social discussion app on what's happening and how it makes sense into the future world.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#C0BAB5",

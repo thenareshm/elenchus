@@ -34,7 +34,7 @@ requiredEnvVars.forEach(varName => {
 
 if (allVarsPresent) {
   console.log('\n✅ All Firebase environment variables are configured!');
-  console.log('🚀 Your app should connect to the PNYXA Firebase project.');
+  console.log('🚀 Your app should connect to the Elenchus Firebase project.');
 } else {
   console.log('\n❌ Some Firebase environment variables are missing.');
   console.log('Please check your .env.local file.');

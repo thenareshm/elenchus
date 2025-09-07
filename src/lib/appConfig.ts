@@ -1,7 +1,7 @@
 export const APP = {
-  name: 'Pnyxa',
-  short: 'Pnyxa',
+  name: 'Elenchus',
+  short: 'Elenchus',
   tagline: 'Think it. Say it. pə-NIK-suh.',
-  url: 'https://pnyxa.app',
+  url: 'https://elenchus.app',
   themeHex: '#C0BAB5',
 } as const;

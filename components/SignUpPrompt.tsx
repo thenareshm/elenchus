@@ -68,7 +68,7 @@ export default function SignUpPrompt() {
         {/* Pulsing HeartBrain Icon */}
         <HeartbrainIcon
           className="w-12 h-12 top-[46px] text-white pointer-events-none animate-pulse-sense"
-          title="Join Pnyxa"
+          title="Join Elenchus"
         />
       </div>
 
