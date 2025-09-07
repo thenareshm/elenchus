@@ -1,6 +1,7 @@
 export const APP = {
-  name: 'PYNX',
-  short: 'PYNX',
-  url: 'https://pynx.app',
+  name: 'PNYXA',
+  short: 'PNYXA',
+  url: 'https://pnyxa.app',
   themeHex: '#C0BAB5',
+  tagline: 'Think it. Say it. pə-NIK-suh.',
 } as const;
