@@ -93,14 +93,7 @@ const Footer = () => {
             <div className="font-mono">Kick-out ⏱️ {formatTime(timeLeft)}</div>
 
             {/* Social Links */}
-            <Link 
-              href="https://www.buymeacoffee.com/nareshmandla" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-900 transition-colors"
-            >
-              Buy Me a Coffee ☕
-            </Link>
+            
             <Link 
               href="https://discord.gg/q6PueR6X3j" 
               target="_blank"
@@ -109,14 +102,7 @@ const Footer = () => {
             >
               Discord 💬
             </Link>
-            <Link 
-              href="https://twitter.com/your-twitter" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-900 transition-colors"
-            >
-              Twitter/X 𝕏
-            </Link>
+            
           </div>
           
           <div className="text-center sm:text-right">
