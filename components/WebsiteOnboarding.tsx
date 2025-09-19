@@ -82,7 +82,7 @@ export default function WebsiteOnboarding({ onComplete }: { onComplete: () => vo
           <div className="flex flex-col items-center space-y-8">
             <div className="w-full max-w-4xl mx-auto px-4">
               <ThanosSnap
-                text="It's time to Snap senseless doom scrolling on — Facebook and Instagram,Time to login elenchus!"
+                text="It's time to Snap senseless doom scrolling on — Facebook and Instagram,Time to login Elenchus!"
                 onComplete={onComplete}
                 className="text-2xl sm:text-4xl font-bold mb-8 inline-block w-full"
               />
